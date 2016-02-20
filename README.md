@@ -1,12 +1,12 @@
 - - -
-#[node+HTML5+js] Niagara's 2016 Live App 
+#[node+HTML5+JS] GenScapes Live 
 - - -
 - - -
 
 ##Concept
 This is an application that generates landscapes from a line-in audio input and allow numerous _Public Clients_, 1 _Stage Client_ and 1 _Projector Client_ to actively or passively interact with the graphics. 
 
-It's main aim is to be used during Niagara's Live sets during the 2016 Spring/Summer tours.
+Its main aim is to be used during live bands shows.
 
 
 ##Type of Clients (definitions)
