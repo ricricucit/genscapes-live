@@ -28,7 +28,7 @@ Its main aim is to be used during live bands shows.
 1. Run `node index.js` to start a nodejs server to run the app
 2. With a _decent browser_ go to [**http://localhost:3000/**](http://localhost:3000/) to act as **Public Client**
 3. With a _decent browser_ go to [**http://localhost:3000/stage/**](http://localhost:3000/stage/) to act as **Stage Client**
-4. **_[TODO]_** With a _decent browser_ go to [**http://localhost:3000/live/**](http://localhost:3000/live/) to act as **Projection Client** **_[/ToDO]_**
+4. **_[TODO]_** With a _decent browser_ go to [**http://localhost:3000/live/**](http://localhost:3000/live/) to act as **Projection Client** **_[/TODO]_**
 
 **_Check Terminal for server help/log messages_**
 
