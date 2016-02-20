@@ -24,13 +24,27 @@ Its main aim is to be used during live bands shows.
 3. Run the command `npm install` to install all project's dependencies coming from _package.json_
 
 
-##Run the Application
-1. Run `node index.js` to start a nodejs server to run the app
-2. With a _decent browser_ go to [**http://localhost:3000/**](http://localhost:3000/) to act as **Public Client**
-3. With a _decent browser_ go to [**http://localhost:3000/stage/**](http://localhost:3000/stage/) to act as **Stage Client**
-4. **_[TODO]_** With a _decent browser_ go to [**http://localhost:3000/live/**](http://localhost:3000/live/) to act as **Projection Client** **_[/TODO]_**
+##Run the Application (Development)
+1. Run `gulp dev` to start a watch on modified dev files that needs a check
+2. Open a new terminal window and run `node index.js` to start a nodejs server to run the app
+3. With a _decent browser_ go to [**http://localhost:3000/**](http://localhost:3000/) to act as **Public Client**
+4. With a _decent browser_ go to [**http://localhost:3000/stage/**](http://localhost:3000/stage/) to act as **Stage Client**
+5. **_[TODO]_** With a _decent browser_ go to [**http://localhost:3000/live/**](http://localhost:3000/live/) to act as **Projection Client** **_[/TODO]_**
 
-**_Check Terminal for server help/log messages_**
+* Check _"node index,js Terminal window"_ to check for server for **_Server-side DEV help/log messages_**
+* Check _"gulp watch Terminal window"_ to check for **_Client-side DEV help/log messages_**
+
+
+##Run the Application (Production)
+1. Run `gulp` to start production tasks
+2. Move to the newly created _**/dist**_ folder
+3. Run `node index.js` to start a nodejs server to run the app
+4. With a _decent browser_ go to [**http://localhost:3000/**](http://localhost:3000/) to act as **Public Client**
+5. With a _decent browser_ go to [**http://localhost:3000/stage/**](http://localhost:3000/stage/) to act as **Stage Client**
+6. **_[TODO]_** With a _decent browser_ go to [**http://localhost:3000/live/**](http://localhost:3000/live/) to act as **Projection Client** **_[/TODO]_**
+7. If everything is working, you are ready to publish the content of the _**/dist**_ folder on your _nodejs hosting_
+
+**_Check Terminal for Server-side help/log messages_**
 
 
 ##Modify the Application

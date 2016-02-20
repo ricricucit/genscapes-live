@@ -1,0 +1,5 @@
+body {
+  background: red;
+  transition: -webkit-transform 2s;
+  transition: transform 2s;
+  transition: transform 2s, -webkit-transform 2s; }

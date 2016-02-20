@@ -1,4 +1,4 @@
-var main = (function(){
+var public = (function(){
 
   //expose a global socket for client (this app)
   var socket = io();
@@ -10,7 +10,7 @@ var main = (function(){
     socket.emit('clicked-red-button', data);
   }
 
-  //expose public vars and/or functions
+  //expose public vars and/or function
   return {
     socket        : socket,
     clickRedBtn   : clickRedBtn

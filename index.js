@@ -22,7 +22,7 @@ app.use(express.static(path.join(__dirname, 'assets')));
 
 //ROUTES
 app.get('/', function(req, res){
-  res.sendFile(__dirname + '/templates/index.html');
+  res.sendFile(__dirname + '/templates/public.html');
 });
 
 app.get('/stage', function(req, res){
