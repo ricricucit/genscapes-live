@@ -3,8 +3,10 @@
   "version": "0.0.1",
   "description": "Niagara app to broadcast generated visuals and modify them through 1 (stage) controller and/or public client running on N devices. See https://cacoo.com/diagrams/ckkzVbmpgZ5wSsWj/edit for more info",
   "dependencies": {
-    "bower": "^1.7.7",
     "express": "^4.13.4",
     "socket.io": "^1.4.5"
+  },
+  "devDependencies": {
+  	"bower": "^1.7.7"
   }
 }
