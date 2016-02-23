@@ -19,6 +19,7 @@ http.listen(3000, function(){
 
 //define static assets folder as "/assets"
 app.use(express.static(path.join(__dirname, 'assets')));
+app.use(express.static(path.join(__dirname, 'bower_components')));
 
 //ROUTES
 app.get('/', function(req, res){
@@ -34,9 +35,9 @@ app.get('/stage', function(req, res){
 io.on('connection', function(socket){
 
   //console.log('1 user connected, ID: ', socket.client.id);
-  
+
   //middleware.getLiveObj();
-  
+
   socket.on('disconnect', function(){
 
     console.log('user, #' + socket.client.id + ' disconnected');
@@ -70,6 +71,6 @@ io.on('connection', function(socket){
   socket.on('clicked-red-button-stage', function(data){
     console.log('----------------------------------------------- CLICKED RED BUTTON FROM STAGE!!');
   });
-  
-  
+
+
 });

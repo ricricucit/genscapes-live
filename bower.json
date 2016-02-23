@@ -1,0 +1,18 @@
+{
+  "name": "genscapes-live",
+  "description": "Niagara app to broadcast generated visuals and modify them through 1 (stage) controller and/or public client running on N devices. See https://cacoo.com/diagrams/ckkzVbmpgZ5wSsWj/edit for more info",
+  "main": "index.js",
+  "license": "MIT",
+  "homepage": "https://github.com/ricricucit/genscapes-live",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "three.js": "^0.74.0"
+  }
+}
