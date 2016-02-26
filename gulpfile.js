@@ -14,7 +14,13 @@ var gulp = require('gulp'),
     cache = require('gulp-cache'),
     livereload = require('gulp-livereload'),
     lr = require('tiny-lr'),
-    server = lr();
+    server = lr(),
+    scripts_to_compress = [ 'node_modules/socket.io-client/socket.io.js',
+                            'bower_components/three.js/three.js',
+                            'assets/scripts/**/*.js',
+                            '!assets/scripts/public.js',
+                            '!assets/scripts/stage.js'
+                          ]
 
 // Styles
 gulp.task('styles', function() {
@@ -48,7 +54,7 @@ gulp.task('templates', function() {
 
 //node scripts
 gulp.task('node_scripts', function() {
-   gulp.src(['./*.js'])
+   gulp.src(['./*.js','!./gulpfile.js'])
    .pipe(gulp.dest('dist'))
    .pipe(notify({ message: 'NodeJS Scripts task complete' }));
 });
@@ -68,7 +74,7 @@ gulp.task('standalone_scripts', function() {
 
 // Scripts
 gulp.task('all_scripts', function() {
-  return gulp.src(['node_modules/socket.io-client/socket.io.js', 'assets/scripts/**/*.js', '!assets/scripts/public.js', '!assets/scripts/stage.js'])
+  return gulp.src(scripts_to_compress)
     //.pipe(jshint('.jshintrc'))
     //.pipe(jshint.reporter('default'))
     .pipe(concat('main.js'))

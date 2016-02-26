@@ -54,6 +54,7 @@ Its main aim is to be used during live bands shows.
 
 ##Modify the Application
 1. For **adding/removing packages & libraries**, (eg. threeJS, helper scripts for node or JS, etc.) the application comes with 2 package managers: [**_Bower_**](http://bower.io/) mainly for **web/client packages** and [**_NPM_**](http://npmjs.com/) mainly for **node/server packages**.
+2. After **adding/removing packages & libraries**, modify the ***gulpfile.js*** array `scripts_to_compress` to update the _distribution script_.
 
 - - -
 - - - 
