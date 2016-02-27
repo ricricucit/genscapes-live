@@ -2,4 +2,15 @@ body {
   background: red;
   transition: -webkit-transform 2s;
   transition: transform 2s;
-  transition: transform 2s, -webkit-transform 2s; }
+  transition: transform 2s, -webkit-transform 2s;
+  margin: 0;
+  padding: 30px;
+  box-sizing: border-box;
+  font-family: sans-serif; }
+
+body.stage {
+  background: black;
+  color: #666;
+  border: 20px solid #f00;
+  width: 100vw;
+  height: 100vh; }
