@@ -18,7 +18,7 @@ var gulp = require('gulp'),
     scripts_to_compress = [ 'node_modules/socket.io-client/socket.io.js',
                             'bower_components/three.js/three.js',
                             'assets/scripts/**/*.js',
-                            '!assets/scripts/public.js',
+                            '!assets/scripts/live.js',
                             '!assets/scripts/stage.js'
                           ]
 
@@ -61,7 +61,7 @@ gulp.task('node_scripts', function() {
 
 // Stand-alone Scripts
 gulp.task('standalone_scripts', function() {
-  return gulp.src(['assets/scripts/public.js', 'assets/scripts/stage.js'])
+  return gulp.src(['assets/scripts/live.js', 'assets/scripts/stage.js'])
     //.pipe(jshint('.jshintrc'))
     //.pipe(jshint.reporter('default'))
     .pipe(gulp.dest('dist/assets/scripts'))

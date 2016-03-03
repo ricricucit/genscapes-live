@@ -1,4 +1,4 @@
-var public = (function(){
+var Live = (function(){
 
   //expose a global socket for client (this app)
   var socket = io();

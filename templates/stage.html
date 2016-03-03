@@ -5,6 +5,11 @@
 
     <!-- build:js /scripts/main.min.js -->
     <script src="/socket.io/socket.io.js"></script>
+    <script src="/three.js/three.js"></script>
+    <!-- endbuild -->
+
+    <!-- build:js /scripts/public.min.js -->
+    <script src="/scripts/stage.js"></script>
     <!-- endbuild -->
 
     <!-- build:css /styles/main.min.css -->
@@ -12,18 +17,8 @@
     <!-- endbuild -->
 
   </head>
-  <body class="stage">
-    <h1>STAGE</h1>
-    <h2>STAGE STATUS <span id="stage-status">enri, possibile mostrare qui lo stato del socket senza troppi giri?
-      lo userei anche per colorare il border del body</span></h2>
-    <canvas id="audioAnalyserMonitor" width="500" height="500" style="background-color:#fff; border:1px solid #000;"></canvas>
+  <body>
+    <h2>This is where the main graphics will be loaded (<strong>index.html</strong>)</h2>
     <button onclick="javascript:Stage.clickRedBtn();">RED BUTTON</button>
-    <p id="keysMonitor" style="color:#fff; font-size:50px;width:200px;height:100px;margin:0;padding:0;float:right;">KEYS MONITOR</p>
-    <p id="socketMonitor" style="width:100%; ">possiamo stampare qui il log del socket?</p>
-
-      <!-- build:js /scripts/stage.min.js -->
-      <script src="/scripts/CwilsonAudioRecorder.js"></script>
-      <script src="/scripts/stage.js"></script>
-      <!-- endbuild -->
   </body>
 </html>

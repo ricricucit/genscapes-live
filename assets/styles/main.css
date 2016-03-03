@@ -10,7 +10,7 @@ body {
 
 body.stage {
   background: black;
-  color: #666;
+  color: #ccc;
   border: 20px solid #f00;
   width: 100vw;
   height: 100vh; }
