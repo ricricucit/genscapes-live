@@ -35,7 +35,7 @@ app_stage.use(express.static(path.join(__dirname, 'bower_components')));
 
 //ROUTES
 app.get('/', function(req, res){
-  res.sendFile(__dirname + '/templates/public.html');
+  res.sendFile(__dirname + '/templates/live.html');
 });
 
 app_stage.get('/stage', function(req, res){
