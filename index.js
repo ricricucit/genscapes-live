@@ -20,11 +20,11 @@ var socket = {};
 
 //start express
 http.listen(config.live_port, config.live_address ,function(){
-  console.log('listening live on 192.168.1.105:3000');
+  console.log('listening live on'+config.live_address+':'+config.live_port);
 });
 //start express
 http_stage.listen(config.stage_port, config.stage_address ,function(){
-  console.log('listening stage on 192.168.1.200:4000');
+  console.log('listening stage on'+config.stage_address+':'+config.stage_port);
 });
 
 //define static assets folder as "/assets"
