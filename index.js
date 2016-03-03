@@ -13,17 +13,18 @@ var io = require('socket.io')(http);
 var io_linein = require('socket.io')(http_stage);
 // middleware to isolate some funcs
 var middleware = require("./middleware.js");
+var config = require("./config.json");
 
 //global socket creation (initialised on specific routes)
 var socket = {};
 
 //start express
-http.listen(3000, "192.168.1.105" ,function(){
-  console.log('listening on 192.168.1.105:3000');
+http.listen(config.live_port, config.live_address ,function(){
+  console.log('listening live on 192.168.1.105:3000');
 });
 //start express
-http_stage.listen(4000, "192.168.1.200" ,function(){
-  console.log('listening on 192.168.1.200:4000');
+http_stage.listen(config.stage_port, config.stage_address ,function(){
+  console.log('listening stage on 192.168.1.200:4000');
 });
 
 //define static assets folder as "/assets"
