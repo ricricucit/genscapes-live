@@ -15,12 +15,15 @@ var gulp = require('gulp'),
     livereload = require('gulp-livereload'),
     lr = require('tiny-lr'),
     server = lr(),
-    scripts_to_compress = [ 'node_modules/socket.io-client/socket.io.js',
-                            'bower_components/three.js/three.js',
-                            'assets/scripts/**/*.js',
-                            '!assets/scripts/live.js',
-                            '!assets/scripts/stage.js'
-                          ]
+    main_scripts = [  'node_modules/socket.io-client/socket.io.js',
+                      'bower_components/three.js/three.js',
+                      'assets/scripts/libs/*.js'],
+
+    live_scripts = [  'bower_components/recordrtc/RecordRTC.js',
+                      'assets/scripts/live.js'],
+
+    stage_scripts = [ 'assets/scripts/stage.js' ];
+
 
 // Styles
 gulp.task('styles', function() {
@@ -59,11 +62,12 @@ gulp.task('node_scripts', function() {
    .pipe(notify({ message: 'NodeJS Scripts task complete' }));
 });
 
-// Stand-alone Scripts
-gulp.task('standalone_scripts', function() {
-  return gulp.src(['assets/scripts/live.js', 'assets/scripts/stage.js'])
+// LIVE Scripts
+gulp.task('live_scripts', function() {
+  return gulp.src(live_scripts)
     //.pipe(jshint('.jshintrc'))
     //.pipe(jshint.reporter('default'))
+    .pipe(concat('live.js'))
     .pipe(gulp.dest('dist/assets/scripts'))
     .pipe(rename({ suffix: '.min' }))
     .pipe(uglify())
@@ -72,9 +76,23 @@ gulp.task('standalone_scripts', function() {
     .pipe(notify({ message: 'Stand-alone Scripts task complete' }));
 });
 
-// Scripts
-gulp.task('all_scripts', function() {
-  return gulp.src(scripts_to_compress)
+// STAGE Scripts
+gulp.task('stage_scripts', function() {
+  return gulp.src(stage_scripts)
+    //.pipe(jshint('.jshintrc'))
+    //.pipe(jshint.reporter('default'))
+    .pipe(concat('stage.js'))
+    .pipe(gulp.dest('dist/assets/scripts'))
+    .pipe(rename({ suffix: '.min' }))
+    .pipe(uglify())
+    .pipe(livereload(server))
+    .pipe(gulp.dest('dist/assets/scripts'))
+    .pipe(notify({ message: 'Stand-alone Scripts task complete' }));
+});
+
+// MAIN (common) Scripts
+gulp.task('main_scripts', function() {
+  return gulp.src(main_scripts)
     //.pipe(jshint('.jshintrc'))
     //.pipe(jshint.reporter('default'))
     .pipe(concat('main.js'))
@@ -103,7 +121,7 @@ gulp.task('clean', function() {
 });
 
 // Default task
-gulp.task('default', ['clean','node_scripts', 'styles', 'all_scripts', 'standalone_scripts', 'images', 'templates']).on('change', function() {
+gulp.task('default', ['clean','node_scripts', 'styles', 'main_scripts', 'stage_scripts','live_scripts', 'images', 'templates']).on('change', function() {
     gulp.run();
 });
 
@@ -123,7 +141,7 @@ gulp.task('watch', function() {
     });
 
     // Watch .js files
-    gulp.watch('assets/scripts/**/*.js', ['all_scripts','standalone_scripts']).on('change', function(event) {
+    gulp.watch('assets/scripts/**/*.js', ['main_scripts','stage_scripts','live_scripts']).on('change', function(event) {
       console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
     });
 
