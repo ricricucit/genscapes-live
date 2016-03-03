@@ -4,18 +4,22 @@
 - - -
 
 ##Concept
-This is an application that generates landscapes from a line-in audio input and allow numerous _Public Clients_, 1 _Stage Client_ and 1 _Projector Client_ to actively or passively interact with the graphics. 
+This is an application that generates landscapes from a line-in audio input and allow numerous _Public Clients_, 1 _Stage Client_ and 1 _Live Client_ to actively or passively interact with the graphics. 
 
 Its main aim is to be used during live bands shows.
 
+##Type of Servers (definitions)
+1. **Cloud Server**: _managing mobile / desktop **Public Clients**_
+2. **Local Server**: _nodejs server managing **Stage Client** and **Live Client**_
 
 ##Type of Clients (definitions)
-1. **Public Client**: _mobile phone browser / desktop browser_
-2. **Stage Client**: _desktop browser on stage_
-3. **Projection Client**: _desktop browser attached to projector_
+1. **Public Client**: _mobile phone browser / desktop browser connected to **Cloud Server**_
+2. **Stage Client**: _browser app point-to-point connected to **Local Server**_
+3. **Live Client**: _nodejs app + browser app managing graphics and sound connected to **Local Server**_
+
 
 ##Schema
-![System Schema](http://i.imgur.com/SdVoYhg.png "System Schema")
+![System Schema](http://i.imgur.com/lM5uvJK.png "System Schema")
 
 
 ##Local Installation
