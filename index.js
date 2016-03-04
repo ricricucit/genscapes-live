@@ -10,7 +10,7 @@ var http = require('http').Server(app);
 var http_stage = require('http').Server(app_stage);
 //create socket from socket.io and pass the http server to it
 var io = require('socket.io')(http);
-var io_linein = require('socket.io')(http_stage);
+var io_stage = require('socket.io')(http_stage);
 // middleware to isolate some funcs
 var middleware = require("./middleware.js");
 var config = require("./config.json");
@@ -39,14 +39,14 @@ app.get('/', function(req, res){
   res.sendFile(__dirname + '/templates/live.html');
 });
 
-app_stage.get('/stage', function(req, res){
+app_stage.get('/', function(req, res){
   res.sendFile(__dirname + '/templates/stage.html');
 });
 
 //on connection creation, a socket is created
 io.on('connection', function(socket){
 
-  //console.log('1 user connected, ID: ', socket.client.id);
+  console.log('1 Live user connected, ID: ', socket.client.id);
 
   //middleware.getLiveObj();
 
@@ -59,7 +59,6 @@ io.on('connection', function(socket){
     if(!middleware.stageIsConnected()){
       console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!SHIEEEEEET: stage is not there!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
     }
-
   });
 
   
@@ -70,16 +69,21 @@ io.on('connection', function(socket){
 
   //test event
   socket.on('clicked-red-button', function(data){
-    console.log('----------------------------------------------- CLICKED RED BUTTON!');
+    console.log('----------------------------------------------- CLICKED RED BUTTON from live!');
   });
+
+  
+
+  //test event
+  
 
 
 });
 
 //on connection creation, a socket is created
-io_linein.on('connection', function(socket){
+io_stage.on('connection', function(socket){
 
-  //console.log('1 user connected, ID: ', socket.client.id);
+  console.log('1 Stage user connected, ID: ', socket.client.id);
 
   //middleware.getLiveObj();
 
@@ -90,7 +94,7 @@ io_linein.on('connection', function(socket){
 
     if(!middleware.stageIsConnected()){
       console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-      console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!SHIEEEEEET: linein is not there!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+      console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!SHIEEEEEET: Stage is not there!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
       console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
     }
 
@@ -101,9 +105,18 @@ io_linein.on('connection', function(socket){
     middleware.addClient(socket.client.id, "stage", data);
   });
 
-  //test event
-  socket.on('clicked-red-button-stage', function(data){
-    console.log('----------------------------------------------- CLICKED RED BUTTON FROM Stage!!');
+  socket.on('audio-received', function(data){
+    var liveObj = middleware.modifyAudioObject(data);
+    io.sockets.emit('changeCanvas', liveObj);
+
   });
+
+  socket.on('clicked-red-button-stage', function(data){
+    console.log('----------------------------------------------- CLICKED RED BUTTON from Stage!');
+    io.sockets.emit('changeBkgColor', data);
+    io_stage.sockets.emit('changeBkgColor', data);
+  });
+
+
 
 });

@@ -5,6 +5,10 @@ var Live = (function(){
   var data = {"color" : '#'+Math.floor(Math.random()*16777215).toString(16)};
   
   socket.emit('client-connect', data);
+  
+  socket.on('changeBkgColor', function(data){
+    document.body.style.background = 'blue';
+  });
 
   var clickRedBtn = function(){
     socket.emit('clicked-red-button', data);

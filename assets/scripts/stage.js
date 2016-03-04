@@ -1,8 +1,4 @@
-var Stage = (function() {
-
-  //expose a global socket for client (this app)
-  var socket = io();
-
+var Stage = (function() {  
 
   //expose a global socket for client (this app)
   var socket = io();
@@ -10,17 +6,23 @@ var Stage = (function() {
   
   socket.emit('stage-connect', data);
 
+  socket.on('changeBkgColor', function(data){
+    document.body.style.background = 'green';
+  });
+
   var clickRedBtn = function(){
     socket.emit('clicked-red-button-stage', data);
   }
-
   //expose public vars and/or function
   return {
     socket        : socket,
     clickRedBtn   : clickRedBtn
   };
 
+
 })();
+
+
 
 
 var linein = (function(){

@@ -3,7 +3,8 @@
 
   var liveObj = {
                   "users" : [],
-                  "controller" : {"key1": 1, "key2": 0, "key3": 1}
+                  "controller" : {"key1": 1, "key2": 0, "key3": 1},
+                  "audio_stream" : []
                 }
 
   var connectedIds = [];
@@ -77,11 +78,18 @@
 
   }
 
+  function modifyAudioObject(data){
+
+    console.log('-----audio----', data);
+    liveObj.audio_stream.push(data);
+    return liveObj;
+  }
 
   module.exports.getLiveObj           = getLiveObj;
   module.exports.addClient            = addClient;
   module.exports.removeClient         = removeClient;
   module.exports.stageIsConnected     = stageIsConnected;
+  module.exports.modifyAudioObject    = modifyAudioObject;
 
 })();
 
