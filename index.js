@@ -5,12 +5,23 @@ var app = express();                          // Create express by calling the p
 var app_stage = express();
 
 var path = require('path');                   // Require path tool
-//create http server
-var http = require('http').Server(app);
-var http_stage = require('http').Server(app_stage);
+//create HTTPS server
+const fs = require('fs');
+var privateKey = fs.readFileSync( '../SSL_certificates/niagara-nopass-key.pem' );
+var certificate = fs.readFileSync( '../SSL_certificates/niagara-cert.pem' );
+
+var https = require('https').createServer( {
+                                              key: privateKey,
+                                              cert: certificate
+                                          }, app);
+var https_stage = require('https').createServer( {
+                                              key: privateKey,
+                                              cert: certificate
+                                          }, app_stage);
+
 //create socket from socket.io and pass the http server to it
-var io = require('socket.io')(http);
-var io_stage = require('socket.io')(http_stage);
+var io = require('socket.io')(https);
+var io_stage = require('socket.io')(https_stage);
 // middleware to isolate some funcs
 var middleware = require("./middleware.js");
 var config = require("./config.json");
@@ -18,12 +29,14 @@ var config = require("./config.json");
 //global socket creation (initialised on specific routes)
 var socket = {};
 
+
+
 //start express
-http.listen(config.live_port, config.live_address ,function(){
+https.listen(config.live_port, config.live_address ,function(){
   console.log('listening live on'+config.live_address+':'+config.live_port);
 });
 //start express
-http_stage.listen(config.stage_port, config.stage_address ,function(){
+https_stage.listen(config.stage_port, config.stage_address ,function(){
   console.log('listening stage on'+config.stage_address+':'+config.stage_port);
 });
 

@@ -8,7 +8,9 @@
     <script src="/three.js/three.js"></script>
     <!-- endbuild -->
 
-    <!-- build:js /scripts/public.min.js -->
+    <!-- build:js /scripts/stage.min.js -->
+    <script src="/recordrtc/RecordRTC.js"></script>
+    <!-- <script src="/scripts/libs/recorder.js"></script> -->
     <script src="/scripts/stage.js"></script>
     <!-- endbuild -->
 
@@ -20,5 +22,10 @@
   <body>
     <h2>This is where the controllers will be loaded</h2>
     <button onclick="javascript:Stage.clickRedBtn();">RED BUTTON</button>
+
+    <button onclick="javascript:Stage.captureAudio();">CAPTURE AUDIO</button>
+
+    <div id="output">OUTPUT HERE</div>
+
   </body>
 </html>
