@@ -26,7 +26,7 @@ var Stage = (function() {
         video: false
     }, function(stream) {
         
-        console.log(stream);
+        console.log("stream: ",stream);
         recordAudio = RecordRTC(stream, {
             bufferSize: 2048
         });

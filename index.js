@@ -1,3 +1,5 @@
+var config = require("./config.json");
+
 //get express (http://expressjs.com/)
 var express = require('express');             // Get the module
 
@@ -5,10 +7,13 @@ var app = express();                          // Create express by calling the p
 var app_stage = express();
 
 var path = require('path');                   // Require path tool
+
+
 //create HTTPS server
 const fs = require('fs');
-var privateKey = fs.readFileSync( '../SSL_certificates/niagara-nopass-key.pem' );
-var certificate = fs.readFileSync( '../SSL_certificates/niagara-cert.pem' );
+
+var privateKey = fs.readFileSync( config.ssl_private_key );
+var certificate = fs.readFileSync( config.ssl_certificate );
 
 var https = require('https').createServer( {
                                               key: privateKey,
@@ -24,7 +29,7 @@ var io = require('socket.io')(https);
 var io_stage = require('socket.io')(https_stage);
 // middleware to isolate some funcs
 var middleware = require("./middleware.js");
-var config = require("./config.json");
+
 
 //global socket creation (initialised on specific routes)
 var socket = {};

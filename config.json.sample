@@ -2,5 +2,7 @@
   "live_address": "192.168.1.105",
   "live_port": 3000,
   "stage_address": "192.168.1.200",
-  "stage_port": 4000
+  "stage_port": 4000,
+  "ssl_private_key": "../../.ssl/private.pem",
+  "ssl_certificate": "../../.ssl/public.pem",
 }
