@@ -18,8 +18,6 @@
     <!-- endbuild -->
 
     <!-- build:js /scripts/stage.min.js -->
-    <script src="/recordrtc/RecordRTC.js"></script>
-    <!-- <script src="/scripts/libs/recorder.js"></script> -->
     <script src="/scripts/stage.js"></script>
     <!-- endbuild -->
 
@@ -33,9 +31,10 @@
     <button onclick="javascript:Stage.clickRedBtn();">RED BUTTON</button>
 
     <button onclick="javascript:Stage.captureAudio();">CAPTURE AUDIO</button>
+    <button onclick="javascript:Stage.stopAudioCapture();">STOP CAPTURE</button>
 
     <div id="output">OUTPUT HERE</div>
-    <canvas id="analyser" width="1024" height="400"></canvas>
+    <canvas id="analyserHTMLcanvas" width="1024" height="400"></canvas>
 
   </body>
 </html>

@@ -6,15 +6,15 @@ var Stage = (function() {
 
   var html_out = document.getElementById("output");
   
-  var audioContext1 = new AudioContext();
-  var audioInput = null,
-      realAudioInput = null,
-      inputPoint = null,
-      audioRecorder = null;
+  var audioContext = new AudioContext();
+  var realAudioInput = null,
+      gainNode = null,
+      delayNode = null,
+      analyserNode = null;
   var rafID = null;
-  var analyserContext = null;
+  var analyserCanvasContext = null;
   var canvasWidth, canvasHeight;
-  var recIndex = 0;
+  var audioStream;
 
   socket.emit('stage-connect', data);
 
@@ -28,67 +28,62 @@ var Stage = (function() {
 
   var captureAudio = function(){
 
-    //alert('capture!');
-    var recordAudio;
+    navigator.getUserMedia = ( navigator.getUserMedia ||
+                               navigator.webkitGetUserMedia ||
+                               navigator.mozGetUserMedia ||
+                               navigator.msGetUserMedia);
 
     navigator.getUserMedia({
         audio: true,
         video: false
     }, function(stream) {
         
-        console.log("stream: ",stream);
-        recordAudio = RecordRTC(stream, {
-            bufferSize: 2048
-        });
-
-        var audioContext = window.AudioContext;
-        var context = new audioContext();
-        var audioInput = context.createMediaStreamSource(stream);
-        var bufferSize = 2048;
-        // create a javascript node
-        var recorder = context.createScriptProcessor(bufferSize, 1, 1);
-        // specify the processing function
-        recorder.onaudioprocess = recorderProcess;
-        // connect stream to our recorder
-        audioInput.connect(recorder);
-        // connect our recorder to the previous destination
-        recorder.connect(context.destination);
-
-        //recordAudio.startRecording();
+        audioStream = stream;
 
 
-        // start of canvas code <<<---------- 
+        // The Following structure creates this graph:
+        // realAudioInput --> gainNode --> delayNode -> analyserNode
 
-        inputPoint = audioContext1.createGain();
 
-        // Create an AudioNode from the stream.
-        realAudioInput = audioContext1.createMediaStreamSource(stream);
-        audioInput = realAudioInput;
-        audioInput.connect(inputPoint);
-
-        var audioInput2 = audioContext1.createMediaStreamSource(stream);
-        var bufferSize = 2048;
-        var recorder = audioContext1.createScriptProcessor(bufferSize, 1, 1);
-        recorder.onaudioprocess = recorderProcess;
-        audioInput2.connect(recorder);
-
+        // Create an AudioNode from realAudio (stream) (https://developer.mozilla.org/en-US/docs/Web/API/AudioNode)
+        realAudioInput  = audioContext.createMediaStreamSource(stream);        
         
+        // Create a new AudioNode "gainNode" that can be used to regulate the overall Gain (or audio level)
+        gainNode  = audioContext.createGain();
+        
+        //connect one output (real audio) node to the input of another node (inputPoint).
+        realAudioInput.connect(gainNode);
 
-        //    audioInput = convertToMono( input );
 
-        analyserNode = audioContext1.createAnalyser();
-        analyserNode.fftSize = 2048;
-        inputPoint.connect( analyserNode );
+        // !!! @enrico's test: attach a delay, before the analyser
+        // delayNode = audioContext.createDelay();
+        // delayNode.delayTime.value = 100;
+        //connect delay after gainNode...which is after after realAudioInput
+        // gainNode.connect( delayNode );
 
-       // audioRecorder = new Recorder( inputPoint );
 
-        zeroGain = audioContext1.createGain();
-        zeroGain.gain.value = 0.0;
-        inputPoint.connect( zeroGain );
-        zeroGain.connect( audioContext1.destination );
+        //create a new AudioNode (analyser) which can be used to expose
+        //audio time and frequency to create data visualisations.
+        analyserNode = audioContext.createAnalyser();
+        //Fast Fourier Transform Size 
+        analyserNode.fftSize = 128;
+
+        //connect gainNode to the Analyser Node (to read data)
+        gainNode.connect( analyserNode );
+
+        // !!! use only if delay node is there:
+        //delayNode.connect( analyserNode );
+
+        // !!! use only if delay node is there:
+        //connect gainNode to the Analyser Node (to read data)
+        //delayNode.connect( audioContext.destination );
+
+
+
+
+       
+        //start drawing "inside requestAnimationFrame"
         updateAnalysers();
-
-        // end of canvas code <<<---------- 
 
 
     }, function(error) {
@@ -102,56 +97,73 @@ var Stage = (function() {
 
   }
 
-  var recorderProcess = function(e) {
-    var left = e.inputBuffer.getChannelData(0);
-    console.log(left);
+  var stopAudioCapture = function(){
+    console.log(audioStream);
+    audioStream.getTracks()[0].stop();
+    window.cancelAnimationFrame(rafID);
   }
 
-  function updateAnalysers(time) {
-    if (!analyserContext) {
-        var canvas = document.getElementById("analyser");
-        canvasWidth = canvas.width;
-        canvasHeight = canvas.height;
-        analyserContext = canvas.getContext('2d');
+
+  var start       = null;
+  var progressBef = 0;
+  function updateAnalysers(timestamp) {
+
+    if (!start) start = timestamp;
+    progress = Math.floor((timestamp - start)/1000);
+
+    if(progress !== progressBef){
+      progressBef = progress;
+      console.log("time:", progress);
+    }else{
+      //console.log("frames per second");
+    }
+
+    
+    // get HTML canvas from DOM and create its context
+    if (!analyserCanvasContext) {
+        var analyserCanvas    = document.getElementById("analyserHTMLcanvas");
+
+        canvasWidth           = analyserCanvas.width;
+        canvasHeight          = analyserCanvas.height;
+        analyserCanvasContext = analyserCanvas.getContext('2d');
     }
 
     // analyzer draw code here
-    {
-        var SPACING = 3;
-        var BAR_WIDTH = 2;
-        var numBars = Math.round(canvasWidth / SPACING);
-        var freqByteData = new Uint8Array(analyserNode.frequencyBinCount);
+    var SPACING = 3;
+    var BAR_WIDTH = 2;
+    var numBars = Math.round(canvasWidth / SPACING);
+    var freqByteData = new Uint8Array(analyserNode.frequencyBinCount);
 
-        analyserNode.getByteFrequencyData(freqByteData); 
+    analyserNode.getByteFrequencyData(freqByteData); 
 
-        analyserContext.clearRect(0, 0, canvasWidth, canvasHeight);
-        analyserContext.fillStyle = '#F6D565';
-        analyserContext.lineCap = 'round';
-        var multiplier = analyserNode.frequencyBinCount / numBars;
+    analyserCanvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
+    analyserCanvasContext.fillStyle = '#F6D565';
+    analyserCanvasContext.lineCap = 'round';
+    var multiplier = analyserNode.frequencyBinCount / numBars;
 
-        // Draw rectangle for each frequency bin.
-        for (var i = 0; i < numBars; ++i) {
-            var magnitude = 0;
-            var offset = Math.floor( i * multiplier );
-            // gotta sum/average the block, or we miss narrow-bandwidth spikes
-            for (var j = 0; j< multiplier; j++)
-                magnitude += freqByteData[offset + j];
-            magnitude = magnitude / multiplier;
-            var magnitude2 = freqByteData[i * multiplier];
-            analyserContext.fillStyle = "hsl( " + Math.round((i*360)/numBars) + ", 100%, 50%)";
-            analyserContext.fillRect(i * SPACING, canvasHeight, BAR_WIDTH, -magnitude);
-        }
+    // Draw rectangle for each frequency bin.
+    for (var i = 0; i < numBars; ++i) {
+        var magnitude = 0;
+        var offset = Math.floor( i * multiplier );
+        // gotta sum/average the block, or we miss narrow-bandwidth spikes
+        for (var j = 0; j< multiplier; j++)
+            magnitude += freqByteData[offset + j];
+        magnitude = magnitude / multiplier;
+        var magnitude2 = freqByteData[i * multiplier];
+        analyserCanvasContext.fillStyle = "hsl( " + Math.round((i*360)/numBars) + ", 100%, 50%)";
+        analyserCanvasContext.fillRect(i * SPACING, canvasHeight, BAR_WIDTH, -magnitude);
     }
     
-    rafID = window.requestAnimationFrame( updateAnalysers );
+    rafID = window.requestAnimationFrame( updateAnalysers ); //returns a unique ID
 }
 
   
   //expose public vars and/or function
   return {
-    socket        : socket,
-    clickRedBtn   : clickRedBtn,
-    captureAudio  : captureAudio
+    socket            : socket,
+    clickRedBtn       : clickRedBtn,
+    captureAudio      : captureAudio,
+    stopAudioCapture  : stopAudioCapture
   };
 
 
