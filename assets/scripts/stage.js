@@ -6,7 +6,11 @@ var Stage = (function() {
 
   var html_out = document.getElementById("output");
   
-  var audioContext1 = new AudioContext();
+  var audioContext = window.AudioContext;
+  var context = new audioContext();
+  var frameCount = context.sampleRate * 2.0;
+
+  ////////////////// start of canvas code <<<---------- 
   var audioInput = null,
       realAudioInput = null,
       inputPoint = null,
@@ -15,7 +19,8 @@ var Stage = (function() {
   var analyserContext = null;
   var canvasWidth, canvasHeight;
   var recIndex = 0;
-
+  ////////////////// end of canvas code <<<---------- 
+  
   socket.emit('stage-connect', data);
 
   socket.on('changeBkgColor', function(data){
@@ -37,12 +42,11 @@ var Stage = (function() {
     }, function(stream) {
         
         console.log("stream: ",stream);
-        recordAudio = RecordRTC(stream, {
-            bufferSize: 2048
-        });
+        // recordAudio = RecordRTC(stream, {
+        //     bufferSize: 2048
+        // });
 
-        var audioContext = window.AudioContext;
-        var context = new audioContext();
+        
         var audioInput = context.createMediaStreamSource(stream);
         var bufferSize = 2048;
         // create a javascript node
@@ -51,44 +55,38 @@ var Stage = (function() {
         recorder.onaudioprocess = recorderProcess;
         // connect stream to our recorder
         audioInput.connect(recorder);
-        // connect our recorder to the previous destination
+        // // connect our recorder to the previous destination
         recorder.connect(context.destination);
 
         //recordAudio.startRecording();
 
 
-        // start of canvas code <<<---------- 
+        ////////////////// start of canvas code <<<---------- 
 
-        inputPoint = audioContext1.createGain();
+        inputPoint = context.createGain();
 
         // Create an AudioNode from the stream.
-        realAudioInput = audioContext1.createMediaStreamSource(stream);
+        realAudioInput = context.createMediaStreamSource(stream);
         audioInput = realAudioInput;
         audioInput.connect(inputPoint);
 
-        var audioInput2 = audioContext1.createMediaStreamSource(stream);
+        var audioInput2 = context.createMediaStreamSource(stream);
         var bufferSize = 2048;
-        var recorder = audioContext1.createScriptProcessor(bufferSize, 1, 1);
+        var recorder = context.createScriptProcessor(bufferSize, 1, 1);
         recorder.onaudioprocess = recorderProcess;
         audioInput2.connect(recorder);
-
-        
-
         //    audioInput = convertToMono( input );
-
-        analyserNode = audioContext1.createAnalyser();
+        analyserNode = context.createAnalyser();
         analyserNode.fftSize = 2048;
         inputPoint.connect( analyserNode );
-
        // audioRecorder = new Recorder( inputPoint );
-
-        zeroGain = audioContext1.createGain();
+        zeroGain = context.createGain();
         zeroGain.gain.value = 0.0;
         inputPoint.connect( zeroGain );
-        zeroGain.connect( audioContext1.destination );
+        zeroGain.connect( context.destination );
         updateAnalysers();
 
-        // end of canvas code <<<---------- 
+        ///////////////////// end of canvas code <<<---------- 
 
 
     }, function(error) {
@@ -103,8 +101,11 @@ var Stage = (function() {
   }
 
   var recorderProcess = function(e) {
-    var left = e.inputBuffer.getChannelData(0);
-    console.log(left);
+    //var left = e.inputBuffer.getChannelData(0);
+    //console.log(left);
+    var myArrayBuffer = context.createBuffer(2, frameCount, context.sampleRate);
+    console.log(myArrayBuffer.getChannelData());
+    socket.emit('audio-received', myArrayBuffer.toString());
   }
 
   function updateAnalysers(time) {
@@ -144,7 +145,7 @@ var Stage = (function() {
     }
     
     rafID = window.requestAnimationFrame( updateAnalysers );
-}
+  }
 
   
   //expose public vars and/or function
