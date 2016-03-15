@@ -38,11 +38,11 @@ var socket = {};
 
 //start express
 https.listen(config.live_port, config.live_address ,function(){
-  console.log('listening live on'+config.live_address+':'+config.live_port);
+  console.log('listening live on '+config.live_address+':'+config.live_port);
 });
 //start express
 https_stage.listen(config.stage_port, config.stage_address ,function(){
-  console.log('listening stage on'+config.stage_address+':'+config.stage_port);
+  console.log('listening stage on '+config.stage_address+':'+config.stage_port);
 });
 
 //define static assets folder as "/assets"
@@ -124,9 +124,10 @@ io_stage.on('connection', function(socket){
   });
 
   socket.on('audio-received', function(data){
-    var liveObj = middleware.modifyAudioObject(data);
-    io.sockets.emit('changeCanvas', liveObj);
-
+    console.log(data);
+    //var liveObj = middleware.modifyAudioObject(data);
+    io.sockets.emit('change-canvas', data);
+    
   });
 
   socket.on('clicked-red-button-stage', function(data){

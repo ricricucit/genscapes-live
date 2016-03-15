@@ -18,6 +18,8 @@
     <!-- endbuild -->
 
     <!-- build:js /scripts/stage.min.js -->
+    <script src="/scripts/libs/Analyser.js"></script>
+    <script src="/scripts/libs/Drawer.js"></script>
     <script src="/scripts/stage.js"></script>
     <!-- endbuild -->
 
@@ -31,7 +33,7 @@
     <button onclick="javascript:Stage.clickRedBtn();">RED BUTTON</button>
 
     <button onclick="javascript:Stage.captureAudio();">CAPTURE AUDIO</button>
-    <button onclick="javascript:Stage.stopAudioCapture();">STOP CAPTURE</button>
+    <button onclick="javascript:Stage.stopAudioCapture();Stage.stopDrawings();">STOP CAPTURE</button>
 
     <div id="output">OUTPUT HERE</div>
     <canvas id="analyserHTMLcanvas" width="1024" height="400"></canvas>
