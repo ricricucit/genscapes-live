@@ -16,15 +16,15 @@ var Drawer = (function(){
     }
 
     // analyzer draw code here
-    var SPACING = 3;
-    var BAR_WIDTH = 2;
+    var SPACING = 20;
+    var BAR_WIDTH = 20;
     var numBars = Math.round(canvasWidth / SPACING);
     var freqByteData = new Uint8Array(analyserNode.frequencyBinCount);
 
     analyserNode.getByteFrequencyData(freqByteData); 
 
     analyserCanvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
-    analyserCanvasContext.fillStyle = '#F6D565';
+    analyserCanvasContext.fillStyle = '#006600';
     analyserCanvasContext.lineCap = 'round';
     var multiplier = analyserNode.frequencyBinCount / numBars;
 
@@ -49,7 +49,7 @@ var Drawer = (function(){
 
       if(progress !== progressBefore){
         progressBefore = progress;
-        console.log("time:", progress);
+        //console.log("time:", progress);
       }else{
         //console.log("frames per second");
       }

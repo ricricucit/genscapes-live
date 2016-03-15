@@ -5,7 +5,9 @@ var Stage = (function(Analyser, Drawer) {
   var data = {"sound" : "555,5555,6,66,,6,76776"};
 
   socket.emit('stage-connect', data);
-
+  
+  document.getElementById("output").innerHTML = "test";
+  
   socket.on('changeBkgColor', function(data){
     document.body.style.background = 'green';
   });
@@ -30,7 +32,7 @@ var Stage = (function(Analyser, Drawer) {
       //console.log("analyserNode!", analyserNode);
       // globalAnalyserNode = analyserNode;
       //requestAnimationFrame
-      console.log(Drawer);
+      //console.log(Drawer);
       Drawer.drawFrequenciesCanvas(analyserNode, "analyserHTMLcanvas");
     });
   }
