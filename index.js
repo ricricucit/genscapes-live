@@ -5,7 +5,7 @@ var express = require('express');             // Get the module
 
 //include Peer server (for streaming data... see peerjs-server "Combinined with Express App")
 var ExpressPeerServer = require('peer').ExpressPeerServer;
-var PeerServer = require('peer').PeerServer;
+
 var app_live  = express();                    // Create express apps
 var app_stage = express();
 
@@ -25,13 +25,13 @@ var peer_options = {
     debug: true
 }
 
-var peer_server = PeerServer({
-                              port: 4001,
-                              ssl: {
-                                key: privateKey,
-                                cert: certificate
-                              }
-                            });
+// var peer_server = PeerServer({
+//                               port: 4001,
+//                               ssl: {
+//                                 key: privateKey,
+//                                 cert: certificate
+//                               }
+//                             });
 
 
 var https_live = require('https').createServer( {
@@ -39,6 +39,11 @@ var https_live = require('https').createServer( {
                                               cert: certificate
                                           }, app_live);
 var https_stage = require('https').createServer( {
+                                              key: privateKey,
+                                              cert: certificate
+                                          }, app_stage);
+
+var https_stream_stage = require('https').createServer( {
                                               key: privateKey,
                                               cert: certificate
                                           }, app_stage);
@@ -64,6 +69,11 @@ https_stage.listen(config.stage_port, config.stage_address ,function(){
   console.log('listening stage on '+config.stage_address+':'+config.stage_port);
 });
 
+//start express
+https_stream_stage.listen(4002, config.stage_address ,function(){
+  console.log('listening stage on '+config.stage_address+':4002');
+});
+
 //define static assets folder as "/assets"
 app_live.use(express.static(path.join(__dirname, 'assets')));
 app_live.use(express.static(path.join(__dirname, 'bower_components')));
@@ -74,12 +84,7 @@ app_stage.use(express.static(path.join(__dirname, 'bower_components')));
 app_stage.use(express.static(path.join(__dirname, 'node_modules')));
 
 
-https_live_stream = ExpressPeerServer(peer_server, peer_options);
-https_live_stream.listen();
-console.log('peerJS Live listening on '+config.live_address+':4001');
-https_stage_stream = ExpressPeerServer(peer_server, peer_options);
-https_stage_stream.listen();
-console.log('peerJS Stage listening on '+config.live_address+':4002');
+app_stage.use('/rt',  ExpressPeerServer(https_stream_stage, {debug: true}));
 
 
 //ROUTES

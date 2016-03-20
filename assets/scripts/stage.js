@@ -3,7 +3,7 @@ var Stage = (function(Analyser) {
   //expose a global socket for client (this app)
   var socket = io();
   var data = {"sound" : "555,5555,6,66,,6,76776"};
-  var peer = new Peer('stage', {host: '192.168.1.200', port: 4002, path: '/stream'});
+  var peer = new Peer('stage', {host: '192.168.1.200', port: 4002, path: '/rt'});
   
   //connect to live, send a simple message
   var conn = peer.connect('live');
@@ -32,24 +32,22 @@ var Stage = (function(Analyser) {
 
   var globalAnalyserNode;
   var captureAudio = function(){
-    var audioStream = Analyser.captureAudio(processAudio);
+    var streamPromise = Analyser.captureAudio(processAudio);
 
-    //call
-    var call = peer.call('live', audioStream);
-    call.on('stream', function(remoteStream) {
-      // Show stream in some video/canvas element.
-      console.log('streamin');
-    });
+    //console.log(streamPromise);
+    //socket.emit('audio-sent', audioStream);
 
-
-    //console.log(audioPromise);
-
-    socket.emit('audio-sent', audioStream);
-    /*audioPromise.then(function(analyserNode){
+    streamPromise.then(function(audioStream){
       //send analyserNode to live, from here
-      
-      console.log("node emitted!");
-    });*/
+      var call = peer.call('live', audioStream);
+      //call
+      call.on('stream', function(remoteStream) {
+        // Show stream in some video/canvas element.
+        console.log('streamin',remoteStream);
+      },function(e){
+        console.log('NOT streamin', e);
+      });
+    });
   }
 
   var stopAudioCapture = function(){
