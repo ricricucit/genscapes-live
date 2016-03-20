@@ -1,8 +1,16 @@
-var Stage = (function(Analyser, Drawer) {  
+var Stage = (function(Analyser) {  
 
   //expose a global socket for client (this app)
   var socket = io();
   var data = {"sound" : "555,5555,6,66,,6,76776"};
+  var peer = new Peer('stage', {host: '192.168.1.200', port: 4002, path: '/stream'});
+  
+  //connect to live, send a simple message
+  var conn = peer.connect('live');
+  conn.on('open', function(){
+    conn.send('hi!');
+  });
+
 
   socket.emit('stage-connect', data);
   
@@ -24,25 +32,28 @@ var Stage = (function(Analyser, Drawer) {
 
   var globalAnalyserNode;
   var captureAudio = function(){
-    var audioPromise = Analyser.captureAudio(processAudio);
+    var audioStream = Analyser.captureAudio(processAudio);
+
+    //call
+    var call = peer.call('live', audioStream);
+    call.on('stream', function(remoteStream) {
+      // Show stream in some video/canvas element.
+      console.log('streamin');
+    });
+
 
     //console.log(audioPromise);
 
-    audioPromise.then(function(analyserNode){
-      //console.log("analyserNode!", analyserNode);
-      // globalAnalyserNode = analyserNode;
-      //requestAnimationFrame
-      //console.log(Drawer);
-      Drawer.drawFrequenciesCanvas(analyserNode, "analyserHTMLcanvas");
-    });
+    socket.emit('audio-sent', audioStream);
+    /*audioPromise.then(function(analyserNode){
+      //send analyserNode to live, from here
+      
+      console.log("node emitted!");
+    });*/
   }
 
   var stopAudioCapture = function(){
     Analyser.stopAudioCapture();
-  }
-
-  var stopDrawings = function(){
-    Drawer.stopDrawings();
   }
 
 
@@ -54,9 +65,8 @@ var Stage = (function(Analyser, Drawer) {
     socket            : socket,
     clickRedBtn       : clickRedBtn,
     captureAudio      : captureAudio,
-    stopAudioCapture  : stopAudioCapture,
-    stopDrawings      : stopDrawings
+    stopAudioCapture  : stopAudioCapture
   };
 
 
-})(Analyser, Drawer);
+})(Analyser);

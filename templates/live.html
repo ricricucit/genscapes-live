@@ -1,36 +1,32 @@
 <!doctype html>
 <html>
   <head>
-     <style>
-        canvas { 
-            display: inline-block; 
-            background: #202020; 
-            width: 95%;
-            height: 15%;
-            box-shadow: 0px 0px 10px blue;
-        }
-    </style>
-
     <title>LIVE</title>
+    
+    <!-- build:css /styles/main.min.css -->
+    <link href="/styles/main.css" rel="stylesheet">
+    <!-- endbuild -->
+
+  </head>
+  <body class="live">
+    <div id="content">
+        <h2>LIVE!</h2>
+        <canvas id="analyserHTMLcanvas" width="1024" height="400"></canvas
+        ><div id="output">OUTPUT HERE</div>
+    </div>
+
+  </body>
 
     <!-- build:js /scripts/main.min.js -->
     <script src="/socket.io/socket.io.js"></script>
     <script src="/three.js/three.js"></script>
     <!-- endbuild -->
 
-    <!-- build:js /scripts/live.min.js -->
-    <script src="/recordrtc/RecordRTC.js"></script>
+    <!-- build:js /scripts/stage.min.js -->
+    <script src="/scripts/libs/Analyser.js"></script>
+    <script src="/scripts/libs/Drawer.js"></script>
+    <script src="/peerjs/peer.js"></script>
     <script src="/scripts/live.js"></script>
     <!-- endbuild -->
 
-    <!-- build:css /styles/main.min.css -->
-    <link href="/styles/main.css" rel="stylesheet">
-    <!-- endbuild -->
-
-  </head>
-  <body>
-    <h2 id='msg'>LIVE CLIENT ::: where the main graphics will be loaded and sent to the projector</h2>
-    <button onclick="javascript:Live.clickRedBtn();">RED BUTTON</button>
-    <canvas id="analyser" width="1024" height="400"></canvas>
-  </body>
 </html>

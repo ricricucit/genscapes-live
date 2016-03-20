@@ -3,29 +3,48 @@ var config = require("./config.json");
 //get express (http://expressjs.com/)
 var express = require('express');             // Get the module
 
-var app = express();                          // Create express by calling the prototype in var express
+//include Peer server (for streaming data... see peerjs-server "Combinined with Express App")
+var ExpressPeerServer = require('peer').ExpressPeerServer;
+var PeerServer = require('peer').PeerServer;
+var app_live  = express();                    // Create express apps
 var app_stage = express();
 
-var path = require('path');                   // Require path tool
+// Require path tool
+var path = require('path');
 
-
-//create HTTPS server
+// Require file module
 const fs = require('fs');
 
+// set HTTPS certs
 var privateKey = fs.readFileSync( config.ssl_private_key );
 var certificate = fs.readFileSync( config.ssl_certificate );
 
-var https = require('https').createServer( {
+
+
+var peer_options = {
+    debug: true
+}
+
+var peer_server = PeerServer({
+                              port: 4001,
+                              ssl: {
+                                key: privateKey,
+                                cert: certificate
+                              }
+                            });
+
+
+var https_live = require('https').createServer( {
                                               key: privateKey,
                                               cert: certificate
-                                          }, app);
+                                          }, app_live);
 var https_stage = require('https').createServer( {
                                               key: privateKey,
                                               cert: certificate
                                           }, app_stage);
 
 //create socket from socket.io and pass the http server to it
-var io = require('socket.io')(https);
+var io_live = require('socket.io')(https_live);
 var io_stage = require('socket.io')(https_stage);
 // middleware to isolate some funcs
 var middleware = require("./middleware.js");
@@ -37,7 +56,7 @@ var socket = {};
 
 
 //start express
-https.listen(config.live_port, config.live_address ,function(){
+https_live.listen(config.live_port, config.live_address ,function(){
   console.log('listening live on '+config.live_address+':'+config.live_port);
 });
 //start express
@@ -46,14 +65,25 @@ https_stage.listen(config.stage_port, config.stage_address ,function(){
 });
 
 //define static assets folder as "/assets"
-app.use(express.static(path.join(__dirname, 'assets')));
-app.use(express.static(path.join(__dirname, 'bower_components')));
+app_live.use(express.static(path.join(__dirname, 'assets')));
+app_live.use(express.static(path.join(__dirname, 'bower_components')));
+app_live.use(express.static(path.join(__dirname, 'node_modules')));
 
 app_stage.use(express.static(path.join(__dirname, 'assets')));
 app_stage.use(express.static(path.join(__dirname, 'bower_components')));
+app_stage.use(express.static(path.join(__dirname, 'node_modules')));
+
+
+https_live_stream = ExpressPeerServer(peer_server, peer_options);
+https_live_stream.listen();
+console.log('peerJS Live listening on '+config.live_address+':4001');
+https_stage_stream = ExpressPeerServer(peer_server, peer_options);
+https_stage_stream.listen();
+console.log('peerJS Stage listening on '+config.live_address+':4002');
+
 
 //ROUTES
-app.get('/', function(req, res){
+app_live.get('/', function(req, res){
   res.sendFile(__dirname + '/templates/live.html');
 });
 
@@ -62,7 +92,7 @@ app_stage.get('/', function(req, res){
 });
 
 //on connection creation, a socket is created
-io.on('connection', function(socket){
+io_live.on('connection', function(socket){
 
   console.log('1 Live user connected, ID: ', socket.client.id);
 
@@ -89,12 +119,6 @@ io.on('connection', function(socket){
   socket.on('clicked-red-button', function(data){
     console.log('----------------------------------------------- CLICKED RED BUTTON from live!');
   });
-
-  
-
-  //test event
-  
-
 
 });
 
@@ -123,16 +147,15 @@ io_stage.on('connection', function(socket){
     middleware.addClient(socket.client.id, "stage", data);
   });
 
-  socket.on('audio-received', function(data){
-    console.log(data);
-    //var liveObj = middleware.modifyAudioObject(data);
-    io.sockets.emit('change-canvas', data);
-    
+  socket.on('audio-sent', function(streamData){
+    console.log('--------------------- audio received from io_stage!', streamData);
+    io_live.sockets.emit('audio-received', streamData);
   });
+
 
   socket.on('clicked-red-button-stage', function(data){
     console.log('----------------------------------------------- CLICKED RED BUTTON from Stage!');
-    io.sockets.emit('changeBkgColor', data);
+    io_live.sockets.emit('changeBkgColor', data);
     io_stage.sockets.emit('changeBkgColor', data);
   });
 

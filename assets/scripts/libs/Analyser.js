@@ -22,11 +22,10 @@ var Analyser = (function(){
           video: false
       }, function(stream) {
           
-          audioStream = stream;
-
+          //audioStream = stream;
 
           // The Following structure creates this graph:
-          // realAudioInput --> analyserNode
+          // realAudioInput --> analyserNode --> audioProcessor
 
           // Create an AudioNode from realAudio (stream) (https://developer.mozilla.org/en-US/docs/Web/API/AudioNode)
           realAudioInput  = audioContext.createMediaStreamSource(stream);
@@ -47,8 +46,7 @@ var Analyser = (function(){
           audioProcessor.onaudioprocess = processCallback;
           audioProcessor.connect(audioContext.destination);
 
-          resolve(analyserNode);
-
+          resolve(stream);
 
       }, function(error) {
           //no UserMedia

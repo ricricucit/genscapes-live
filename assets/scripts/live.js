@@ -1,104 +1,63 @@
-var Live = (function(){
+var Live = (function(Analyser, Drawer) {  
 
   //expose a global socket for client (this app)
   var socket = io();
-  var data = {"color" : '#'+Math.floor(Math.random()*16777215).toString(16)};
-  
-  var audioContext1 = new AudioContext();
-  var audioInput = null,
-      realAudioInput = null,
-      inputPoint = null,
-      audioRecorder = null;
-  var rafID = null;
-  var analyserContext = null;
-  var canvasWidth, canvasHeight;
-  var recIndex = 0;
-  var source = audioContext1.createBufferSource();
+  var data = {"sound" : "555,5555,6,66,,6,76776"};
+  var peer = new Peer('live', {host: '192.168.1.105', port: 4001, path: '/stream'});
 
-  socket.emit('client-connect', data);
+  socket.emit('live-connect', data);
+  peer.on('connection', function(conn) {
+    conn.on('data', function(data){
+      // Will print 'hi!'
+      console.log(data);
+    });
+  });
+
+  var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+  peer.on('call', function(call) {
+    getUserMedia({video: false, audio: true}, function(stream) {
+      call.answer(stream); // Answer the call with an A/V stream.
+      call.on('stream', function(remoteStream) {
+        // Show stream in some video/canvas element.
+      });
+    }, function(err) {
+      console.log('Failed to get local stream' ,err);
+    });
+  });
+
+
+  
+  document.getElementById("output").innerHTML = "test";
   
   socket.on('changeBkgColor', function(data){
-    document.body.style.background = 'blue';
+    document.body.style.background = 'green';
   });
 
   var clickRedBtn = function(){
-    socket.emit('clicked-red-button', data);
+    socket.emit('clicked-red-button-live', data);
   }
 
-  socket.on('change-canvas', function(data){
-    console.log(data);
 
-    inputPoint = audioContext1.createGain();
+  var stopDrawings = function(){
+    Drawer.stopDrawings();
+  }
 
-        // Create an AudioNode from the stream.
+  socket.on('audio-received', function(data){
+    console.log("Audio received!", data);
     
-   // set the buffer in the AudioBufferSourceNode
-    //source.buffer = data;
-    // connect the AudioBufferSourceNode to the
-    // destination so we can hear the sound
-    source.connect(audioContext1.destination);
-
-    
-
-    //    audioInput = convertToMono( input );
-
-    analyserNode = audioContext1.createAnalyser();
-    analyserNode.fftSize = 2048;
-    inputPoint.connect( analyserNode );
-
-   // audioRecorder = new Recorder( inputPoint );
-
-    zeroGain = audioContext1.createGain();
-    zeroGain.gain.value = 0.0;
-    inputPoint.connect( zeroGain );
-    zeroGain.connect( audioContext1.destination );
-    updateAnalysers();
-
   });
 
-  function updateAnalysers(time) {
-    if (!analyserContext) {
-        var canvas = document.getElementById("analyser");
-        canvasWidth = canvas.width;
-        canvasHeight = canvas.height;
-        analyserContext = canvas.getContext('2d');
-    }
+  var draw = function(analyserNode){
+    Drawer.drawFrequenciesCanvas(analyserNode, "analyserHTMLcanvas");
+  }  
 
-    // analyzer draw code here
-    {
-        var SPACING = 100;
-        var BAR_WIDTH = 2;
-        var numBars = Math.round(canvasWidth / SPACING);
-        var freqByteData = new Uint8Array(analyserNode.frequencyBinCount);
-
-        analyserNode.getByteFrequencyData(freqByteData); 
-
-        analyserContext.clearRect(0, 0, canvasWidth, canvasHeight);
-        analyserContext.fillStyle = '#F6D565';
-        analyserContext.lineCap = 'round';
-        var multiplier = analyserNode.frequencyBinCount / numBars;
-
-        // Draw rectangle for each frequency bin.
-        for (var i = 0; i < numBars; ++i) {
-            var magnitude = 0;
-            var offset = Math.floor( i * multiplier );
-            // gotta sum/average the block, or we miss narrow-bandwidth spikes
-            for (var j = 0; j< multiplier; j++)
-                magnitude += freqByteData[offset + j];
-            magnitude = magnitude / multiplier;
-            var magnitude2 = freqByteData[i * multiplier];
-            analyserContext.fillStyle = "hsl( " + Math.round((i*360)/numBars) + ", 100%, 50%)";
-            analyserContext.fillRect(i * SPACING, canvasHeight, BAR_WIDTH, -magnitude);
-        }
-    }
-    
-    rafID = window.requestAnimationFrame( updateAnalysers );
-  }
 
   //expose public vars and/or function
   return {
-    socket        : socket,
-    clickRedBtn   : clickRedBtn
+    socket            : socket,
+    clickRedBtn       : clickRedBtn,
+    stopDrawings      : stopDrawings
   };
 
-})();
+
+})(Analyser, Drawer);

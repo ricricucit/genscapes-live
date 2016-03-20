@@ -4,7 +4,9 @@
   "description": "Niagara app to broadcast generated visuals and modify them through 1 (stage) controller and/or public client running on N devices. See https://cacoo.com/diagrams/ckkzVbmpgZ5wSsWj/edit for more info",
   "dependencies": {
     "express": "^4.13.4",
-    "socket.io": "^1.4.5"
+    "peer": "^0.2.8",
+    "socket.io": "^1.4.5",
+    "socket.io-stream": "^0.9.0"
   },
   "devDependencies": {
     "bower": "^1.7.7",
