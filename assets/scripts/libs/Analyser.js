@@ -22,9 +22,10 @@ var Analyser = (function(){
           video: false
       }, function(stream) {
           
-          resolve(stream);
+          //Final:
+          //resolve(stream);
 
-          /*
+          
           audioStream = stream;
 
           // The Following structure creates this graph:
@@ -50,7 +51,7 @@ var Analyser = (function(){
           audioProcessor.connect(audioContext.destination);
 
           resolve(analyserNode);
-          */
+
 
       }, function(error) {
           //no UserMedia

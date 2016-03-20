@@ -1,5 +1,8 @@
+* {
+  font-family: "Avenir","Roboto", Helvetica, Arial; }
+
 body {
-  background: red;
+  background: #ddd;
   transition: -webkit-transform 2s;
   transition: transform 2s;
   transition: transform 2s, -webkit-transform 2s;
@@ -9,11 +12,11 @@ body {
   font-family: sans-serif; }
 
 body.stage, body.live {
-  background: black;
+  background: white;
   background-size: 100% auto;
   background-position: center 70%;
-  color: #ccc;
-  border: 20px solid #f00;
+  color: #666;
+  border: 10px solid #ddd;
   width: 100vw;
   height: 100vh; }
 
@@ -25,16 +28,24 @@ body.live {
   margin: auto; }
 
 .stage button {
-  width: 200px;
-  height: 70px; }
+  background: #ddd;
+  border: none;
+  border-radius: 15px;
+  padding: 5px 10px; }
+
+.stage .btns {
+  margin-bottom: 20px; }
 
 .stage .redbutton {
   background-color: red;
   color: white; }
 
-.live canvas {
+.live canvas, .stage canvas {
   display: inline-block;
-  background: #006600;
+  background: #ddd;
   width: 50%;
   height: 20%;
   box-shadow: 0px 0px 10px blue; }
+
+.stage canvas {
+  background: #ddd; }
