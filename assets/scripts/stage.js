@@ -1,10 +1,14 @@
-var Stage = (function(Analyser) {  
+var Stage = (function(Analyser, Drawer) {  
 
   //expose a global socket for client (this app)
   var socket = io();
   var data = {"sound" : "555,5555,6,66,,6,76776"};
   var peer = new Peer('stage', {host: '192.168.1.200', port: 4002, path: '/rt'});
   
+  var audioContext    = new AudioContext();
+  var realAudioInput  = null,
+      analyserNode    = null;
+
   //connect to live, send a simple message
   var conn = peer.connect('live');
   conn.on('open', function(){
@@ -38,7 +42,12 @@ var Stage = (function(Analyser) {
     //socket.emit('audio-sent', audioStream);
 
     streamPromise.then(function(audioStream){
+
+      Drawer.drawFrequenciesCanvas(audioStream, "analyserHTMLcanvas");
+
       //send analyserNode to live, from here
+      /*
+      
       var call = peer.call('live', audioStream);
       //call
       call.on('stream', function(remoteStream) {
@@ -47,13 +56,14 @@ var Stage = (function(Analyser) {
       },function(e){
         console.log('NOT streamin', e);
       });
+      */
+     
     });
   }
 
   var stopAudioCapture = function(){
     Analyser.stopAudioCapture();
   }
-
 
 
 
@@ -67,4 +77,4 @@ var Stage = (function(Analyser) {
   };
 
 
-})(Analyser);
+})(Analyser, Drawer);

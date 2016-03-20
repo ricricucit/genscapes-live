@@ -6,6 +6,10 @@ var Live = (function(Analyser, Drawer) {
   //var peer = new Peer('live', {host: '192.168.1.105', port: 4001, path: '/rt'});
   var peer = new Peer('live', {host: '192.168.1.200', port: 4002, path: '/rt'});
 
+  var audioContext    = new AudioContext();
+  var realAudioInput  = null,
+      analyserNode    = null;
+
   socket.emit('live-connect', data);
   peer.on('connection', function(conn) {
     conn.on('data', function(data){
@@ -24,8 +28,19 @@ var Live = (function(Analyser, Drawer) {
     navigator.getUserMedia({video: false, audio: true}, function(stream) {
       call.answer(stream); // Answer the call with an V stream.
       call.on('stream', function(remoteStream) {
-        // Show stream in some video/canvas element.
-        console.log('Stream HERE!',remoteStream);
+          
+          // Show stream in some video/canvas element.
+          console.log('Stream HERE!',remoteStream);
+
+          // The Following structure creates this graph:
+          // realAudioInput --> analyserNode --> audioProcessor
+          realAudioInput  = audioContext.createMediaStreamSource(remoteStream);
+          analyserNode = audioContext.createAnalyser();
+          realAudioInput.connect(analyserNode);
+          analyserNode.fftSize = 2048;
+
+          draw(analyserNode);
+
       });
     }, function(err) {
       console.log('Failed to get local stream' ,err);

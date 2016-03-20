@@ -11,26 +11,26 @@
   <body class="stage">
     <div id="content">
         <h2>This is where the controllers will be loaded</h2>
+<canvas id="analyserHTMLcanvas" width="1024" height="400"></canvas
+        ><div id="output">OUTPUT HERE</div>
+        
         <button class="redbutton" onclick="javascript:Stage.clickRedBtn();">RED BUTTON</button>
 
         <button onclick="javascript:Stage.captureAudio();">CAPTURE AUDIO</button>
         <button onclick="javascript:Stage.stopAudioCapture();Stage.stopDrawings();">STOP CAPTURE</button>
-
-        <div id="output">OUTPUT HERE</div>
     </div>
 
   </body>
 
     <!-- build:js /scripts/main.min.js -->
     <script src="/socket.io/socket.io.js"></script>
-    <script src="/socket.io-client/socket.io.js"></script>
-    <script src="/socket.io-stream/socket.io-stream.js"></script>
     <script src="/peerjs/peer.js"></script>
     <script src="/three.js/three.js"></script>
     <!-- endbuild -->
 
     <!-- build:js /scripts/stage.min.js -->
     <script src="/scripts/libs/Analyser.js"></script>
+    <script src="/scripts/libs/Drawer.js"></script>
     <script src="/scripts/stage.js"></script>
     <!-- endbuild -->
 

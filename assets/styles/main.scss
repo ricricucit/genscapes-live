@@ -8,7 +8,7 @@ body {
   box-sizing: border-box;
   font-family: sans-serif; }
 
-body.stage {
+body.stage, body.live {
   background: black;
   background-size: 100% auto;
   background-position:  center 70%;
@@ -16,7 +16,11 @@ body.stage {
   border: 20px solid #f00;
   width: 100vw;
   height: 100vh;
-  }
+}
+
+body.live{
+  border: none;
+}
 
 .stage #content{
 	width:90%;
@@ -31,7 +35,7 @@ body.stage {
 	background-color: red;
 	color:white;
 }
-.stage canvas { 
+.live canvas { 
     display: inline-block; 
     background: #006600; 
     width: 50%;
