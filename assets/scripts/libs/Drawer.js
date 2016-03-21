@@ -25,7 +25,7 @@ var Drawer = (function(){
         for (var j = 0; j< multiplier; j++)
             magnitude += freqByteData[offset + j];
         magnitude = magnitude / multiplier;
-        console.log(magnitude);
+        //console.log(magnitude);
         var magnitude2 = freqByteData[i * multiplier];
         canvas.context.fillStyle = "hsl( " + Math.round((i*360)/numBars) + ", 100%, 50%)";
         canvas.context.fillRect(i * SPACING, canvas.height, BAR_WIDTH, -magnitude);

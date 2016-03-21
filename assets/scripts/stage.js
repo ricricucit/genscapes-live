@@ -55,15 +55,7 @@ var Stage = (function(Analyser, Drawer) {
 
       //send analyserNode to live, from here
       var call = peer.call('live', audioStream);
-
       console.log('streamin',audioStream);
-      //call
-      call.on('stream', function(remoteStream) {
-        // Show stream in some video/canvas element.
-        console.log('streamin',remoteStream);
-      },function(e){
-        console.log('NOT streamin', e);
-      });
      
     });
   }

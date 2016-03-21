@@ -19,14 +19,6 @@ var Live = (function(Analyser, Drawer) {
   });
 
 
-  navigator.getUserMedia = ( navigator.getUserMedia ||
-                             navigator.webkitGetUserMedia ||
-                             navigator.mozGetUserMedia ||
-                             navigator.msGetUserMedia);
-  
-
-  
-
   peer.on('call', function(call) {
     // Answer the call, providing our mediaStream
     call.answer();
@@ -41,6 +33,7 @@ var Live = (function(Analyser, Drawer) {
       analyserNode = audioContext.createAnalyser();
       realAudioInput.connect(analyserNode);
       analyserNode.fftSize = 2048;
+      analyserNode.connect(audioContext.destination);
 
       draw(analyserNode);
 
