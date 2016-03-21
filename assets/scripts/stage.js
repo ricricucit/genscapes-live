@@ -43,12 +43,20 @@ var Stage = (function(Analyser, Drawer) {
 
     streamPromise.then(function(audioStream){
 
-      Drawer.drawFrequenciesCanvas(audioStream, "analyserHTMLcanvas");
+      // The Following structure creates this graph:
+      // realAudioInput --> analyserNode --> audioProcessor
+      realAudioInput  = audioContext.createMediaStreamSource(audioStream);
+      analyserNode = audioContext.createAnalyser();
+      realAudioInput.connect(analyserNode);
+      analyserNode.fftSize = 2048;
+
+      draw(analyserNode);
+      //Drawer.drawFrequenciesCanvas(audioStream, "analyserHTMLcanvas");
 
       //send analyserNode to live, from here
-      /*
-      
       var call = peer.call('live', audioStream);
+
+      console.log('streamin',audioStream);
       //call
       call.on('stream', function(remoteStream) {
         // Show stream in some video/canvas element.
@@ -56,9 +64,21 @@ var Stage = (function(Analyser, Drawer) {
       },function(e){
         console.log('NOT streamin', e);
       });
-      */
      
     });
+  }
+
+  var draw = function(analyserNode){
+
+    var analyserCanvas = document.getElementById("analyserHTMLcanvasStage");
+
+    var canvas =  {
+                    "el"      : analyserCanvas,
+                    "context" : analyserCanvas.getContext('2d'),
+                    "width"   : analyserCanvas.width,
+                    "height"  : analyserCanvas.height
+                  };
+    Drawer.drawFrequenciesCanvas(analyserNode, canvas);
   }
 
   var stopAudioCapture = function(){

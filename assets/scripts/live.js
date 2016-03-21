@@ -24,30 +24,45 @@ var Live = (function(Analyser, Drawer) {
                              navigator.mozGetUserMedia ||
                              navigator.msGetUserMedia);
   
+
+  
+
   peer.on('call', function(call) {
-    navigator.getUserMedia({video: false, audio: true}, function(stream) {
-      call.answer(stream); // Answer the call with an V stream.
-      call.on('stream', function(remoteStream) {
-          
-          // Show stream in some video/canvas element.
-          console.log('Stream HERE!',remoteStream);
+    // Answer the call, providing our mediaStream
+    call.answer();
 
-          // The Following structure creates this graph:
-          // realAudioInput --> analyserNode --> audioProcessor
-          realAudioInput  = audioContext.createMediaStreamSource(remoteStream);
-          analyserNode = audioContext.createAnalyser();
-          realAudioInput.connect(analyserNode);
-          analyserNode.fftSize = 2048;
+    call.on('stream', function(remoteStream){
+      // Show stream in some video/canvas element.
+      console.log('Stream HERE!',remoteStream);
 
-          draw(analyserNode);
+      // The Following structure creates this graph:
+      // realAudioInput --> analyserNode --> audioProcessor
+      realAudioInput  = audioContext.createMediaStreamSource(remoteStream);
+      analyserNode = audioContext.createAnalyser();
+      realAudioInput.connect(analyserNode);
+      analyserNode.fftSize = 2048;
 
-      });
-    }, function(err) {
-      console.log('Failed to get local stream' ,err);
+      draw(analyserNode);
+
     });
+
   });
 
+  var draw = function(analyserNode){
+    console.log("start drwaing!");
 
+    var analyserCanvas = document.getElementById("analyserHTMLcanvasLive");
+
+    var canvas =  {
+                    "el"      : analyserCanvas,
+                    "context" : analyserCanvas.getContext('2d'),
+                    "width"   : analyserCanvas.width,
+                    "height"  : analyserCanvas.height
+                  };
+                  console.log(canvas);
+
+    Drawer.drawFrequenciesCanvas(analyserNode, canvas);
+  }
   
   document.getElementById("output").innerHTML = "test";
   
@@ -69,9 +84,6 @@ var Live = (function(Analyser, Drawer) {
     
   });
 
-  var draw = function(analyserNode){
-    Drawer.drawFrequenciesCanvas(analyserNode, "analyserHTMLcanvas");
-  }  
 
 
   //expose public vars and/or function

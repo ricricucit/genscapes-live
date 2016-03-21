@@ -23,10 +23,12 @@ var Analyser = (function(){
       }, function(stream) {
           
           //Final:
-          //resolve(stream);
+          audioStream = stream;
+          realAudioInput  = audioContext.createMediaStreamSource(stream);
+          resolve(stream);
 
           
-          audioStream = stream;
+          /*
 
           // The Following structure creates this graph:
           // realAudioInput --> analyserNode --> audioProcessor
@@ -51,6 +53,7 @@ var Analyser = (function(){
           audioProcessor.connect(audioContext.destination);
 
           resolve(analyserNode);
+          */
 
 
       }, function(error) {
