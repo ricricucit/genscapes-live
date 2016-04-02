@@ -4,7 +4,7 @@ var Live = (function(Analyser, Drawer) {
   var socket = io();
   var data = {"sound" : "555,5555,6,66,,6,76776"};
   //var peer = new Peer('live', {host: '192.168.1.105', port: 4001, path: '/rt'});
-  var peer = new Peer('live', {host: '192.168.1.200', port: 4002, path: '/rt'});
+  var peer = new Peer('live', {host: '192.168.1.200', port: 4002, path: '/rt', debug: 3});
 
   var audioContext    = new AudioContext();
   var realAudioInput  = null,
@@ -29,13 +29,26 @@ var Live = (function(Analyser, Drawer) {
 
       // The Following structure creates this graph:
       // realAudioInput --> analyserNode --> audioProcessor
-      realAudioInput  = audioContext.createMediaStreamSource(remoteStream);
-      analyserNode = audioContext.createAnalyser();
-      realAudioInput.connect(analyserNode);
-      analyserNode.fftSize = 2048;
-      analyserNode.connect(audioContext.destination);
+      
+      //analyserNode.connect(audioContext.destination);
 
-      draw(analyserNode);
+      setTimeout(function(ev){
+
+
+        var audio_elem = document.createElement("audio");
+        // var audio_elem = document.getElementById("audio");
+        audio_elem.src = URL.createObjectURL(remoteStream);
+        //audio_elem.play();
+
+        realAudioInput  = audioContext.createMediaStreamSource(remoteStream);
+        analyserNode = audioContext.createAnalyser();
+        realAudioInput.connect(analyserNode);
+        analyserNode.fftSize = 2048;
+
+        draw(analyserNode);
+      }, 2000);
+
+      
 
     });
 

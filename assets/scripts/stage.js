@@ -3,7 +3,7 @@ var Stage = (function(Analyser, Drawer) {
   //expose a global socket for client (this app)
   var socket = io();
   var data = {"sound" : "555,5555,6,66,,6,76776"};
-  var peer = new Peer('stage', {host: '192.168.1.200', port: 4002, path: '/rt'});
+  var peer = new Peer('stage', {host: '192.168.1.200', port: 4002, path: '/rt', debug: 3});
   
   var audioContext    = new AudioContext();
   var realAudioInput  = null,

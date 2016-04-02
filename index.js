@@ -84,7 +84,7 @@ app_stage.use(express.static(path.join(__dirname, 'bower_components')));
 app_stage.use(express.static(path.join(__dirname, 'node_modules')));
 
 
-app_stage.use('/rt',  ExpressPeerServer(https_stream_stage, {debug: true}));
+app_stage.use('/rt',  ExpressPeerServer(https_stream_stage, {debug: 3}));
 
 
 //ROUTES
