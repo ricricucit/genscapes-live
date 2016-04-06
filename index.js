@@ -164,6 +164,14 @@ io_stage.on('connection', function(socket){
     io_stage.sockets.emit('changeBkgColor', data);
   });
 
+  socket.on('stopDrawings', function(data){
+    console.log('----------------------------------------------- Stop Drawings from Stage!');
+    io_live.sockets.emit('stopDrawings', data);
+    
+  });
+
+
+
 
 
 });

@@ -79,6 +79,7 @@ var Stage = (function(Analyser, Drawer) {
 
   var stopDrawings = function(){
     Drawer.stopDrawings();
+    socket.emit('stopDrawings', data);
   }
 
 

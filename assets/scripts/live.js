@@ -76,6 +76,10 @@ var Live = (function(Analyser, Drawer) {
     document.body.style.background = 'green';
   });
 
+  socket.on('stopDrawings', function(data){
+    stopDrawings();
+  });
+
   var clickRedBtn = function(){
     socket.emit('clicked-red-button-live', data);
   }
