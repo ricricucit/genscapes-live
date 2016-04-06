@@ -62,11 +62,11 @@ var socket = {};
 
 //start express
 https_live.listen(config.live_port, config.live_address ,function(){
-  console.log('listening live on '+config.live_address+':'+config.live_port);
+  console.log('listening live on https://'+config.live_address+':'+config.live_port);
 });
 //start express
 https_stage.listen(config.stage_port, config.stage_address ,function(){
-  console.log('listening stage on '+config.stage_address+':'+config.stage_port);
+  console.log('listening stage on https://'+config.stage_address+':'+config.stage_port);
 });
 
 //start express

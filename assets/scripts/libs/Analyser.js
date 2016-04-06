@@ -73,7 +73,7 @@ var Analyser = (function(){
   var stopAudioCapture = function(){
     console.log("STOPPING STREAM: ", audioStream);
     audioStream.getTracks()[0].stop();
-    audioProcessor.disconnect(audioContext.destination);
+    //audioProcessor.disconnect(audioContext.destination);
   }
 
   //expose public vars and/or function
