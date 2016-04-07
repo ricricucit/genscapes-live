@@ -76,8 +76,16 @@ var Live = (function(Analyser, Drawer) {
     document.body.style.background = 'green';
   });
 
-  socket.on('stopDrawings', function(data){
+  socket.on('stop-drawings', function(data){
     stopDrawings();
+  });
+
+   socket.on('audio-received', function(data){
+    console.log("Audio received!", data);
+  });
+
+  socket.on('change-color', function(data){
+    Drawer.changeColor();
   });
 
   var clickRedBtn = function(){
@@ -89,10 +97,7 @@ var Live = (function(Analyser, Drawer) {
     Drawer.stopDrawings();
   }
 
-  socket.on('audio-received', function(data){
-    console.log("Audio received!", data);
-    
-  });
+ 
 
 
 

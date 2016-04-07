@@ -79,7 +79,12 @@ var Stage = (function(Analyser, Drawer) {
 
   var stopDrawings = function(){
     Drawer.stopDrawings();
-    socket.emit('stopDrawings', data);
+    socket.emit('stop-drawings', data);
+  }
+
+  var changeColor = function(){
+    
+    socket.emit('change-color', data);
   }
 
 
@@ -92,6 +97,7 @@ var Stage = (function(Analyser, Drawer) {
     captureAudio      : captureAudio,
     stopAudioCapture  : stopAudioCapture,
     stopDrawings      : stopDrawings,
+    changeColor       : changeColor,
   };
 
 
