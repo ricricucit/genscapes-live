@@ -97,6 +97,7 @@ app_stage.get('/', function(req, res){
 });
 
 app_live.get('/message', function(req, res){
+  io_live.sockets.emit('changeBkgColor', data);
   res.send('OK');
 });
 
