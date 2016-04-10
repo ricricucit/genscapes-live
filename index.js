@@ -60,18 +60,17 @@ var socket = {};
 
 
 
-//start express
+//start express LIVE
 https_live.listen(config.live_port, config.live_address ,function(){
-  console.log('listening live on https://'+config.live_address+':'+config.live_port);
+  console.log('listening LIVE on https://'+config.live_address+':'+config.live_port);
 });
-//start express
+//start express LIVE
+https_stream_stage.listen(4002, config.live_address ,function(){
+  console.log('listening STREAMING LIVE on '+config.live_address+':4002');
+});
+//start express STAGE
 https_stage.listen(config.stage_port, config.stage_address ,function(){
-  console.log('listening stage on https://'+config.stage_address+':'+config.stage_port);
-});
-
-//start express
-https_stream_stage.listen(4002, config.stage_address ,function(){
-  console.log('listening stage on '+config.stage_address+':4002');
+  console.log('listening STREAM on https://'+config.stage_address+':'+config.stage_port);
 });
 
 //define static assets folder as "/assets"
@@ -97,7 +96,7 @@ app_stage.get('/', function(req, res){
 });
 
 app_live.get('/message', function(req, res){
-  io_live.sockets.emit('changeBkgColor', data);
+  io_live.sockets.emit('changeBkgColor', '#556644');
   res.send('OK');
 });
 
