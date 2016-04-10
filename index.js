@@ -96,6 +96,10 @@ app_stage.get('/', function(req, res){
   res.sendFile(__dirname + '/templates/stage.html');
 });
 
+app_live.get('/message', function(req, res){
+  res.send('OK');
+});
+
 //on connection creation, a socket is created
 io_live.on('connection', function(socket){
 
