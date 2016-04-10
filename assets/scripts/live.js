@@ -1,4 +1,4 @@
-var Live = (function(Analyser, Drawer) {  
+var Live = (function(Drawer) {
 
   //expose a global socket for client (this app)
   var socket = io();
@@ -29,14 +29,13 @@ var Live = (function(Analyser, Drawer) {
 
       // The Following structure creates this graph:
       // realAudioInput --> analyserNode --> audioProcessor
-      
+
       //analyserNode.connect(audioContext.destination);
 
       setTimeout(function(ev){
 
 
         var audio_elem = document.createElement("audio");
-        // var audio_elem = document.getElementById("audio");
         audio_elem.src = URL.createObjectURL(remoteStream);
         //audio_elem.play();
 
@@ -48,7 +47,7 @@ var Live = (function(Analyser, Drawer) {
         draw(analyserNode);
       }, 2000);
 
-      
+
 
     });
 
@@ -69,9 +68,9 @@ var Live = (function(Analyser, Drawer) {
 
     Drawer.drawFrequenciesCanvas(analyserNode, canvas);
   }
-  
+
   document.getElementById("output").innerHTML = "test";
-  
+
   socket.on('changeBkgColor', function(data){
     document.body.style.background = 'green';
   });
@@ -87,7 +86,7 @@ var Live = (function(Analyser, Drawer) {
 
   socket.on('audio-received', function(data){
     console.log("Audio received!", data);
-    
+
   });
 
 
@@ -100,4 +99,4 @@ var Live = (function(Analyser, Drawer) {
   };
 
 
-})(Analyser, Drawer);
+})(Drawer);
