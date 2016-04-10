@@ -4,7 +4,7 @@ var Live = (function(Drawer) {
   var socket = io();
   var data = {"sound" : "555,5555,6,66,,6,76776"};
   //var peer = new Peer('live', {host: '192.168.1.105', port: 4001, path: '/rt'});
-  var peer = new Peer('live', {host: '192.168.1.200', port: 4002, path: '/rt', debug: 3});
+  var peer = new Peer('live', {host: '192.168.1.200', port: 4002, path: '/rt', debug: 0});
 
   var audioContext    = new AudioContext();
   var realAudioInput  = null,
@@ -54,7 +54,7 @@ var Live = (function(Drawer) {
   });
 
   var draw = function(analyserNode){
-    console.log("start drwaing!");
+    console.log("start drawing!");
 
     var analyserCanvas = document.getElementById("analyserHTMLcanvasLive");
 
@@ -75,6 +75,18 @@ var Live = (function(Drawer) {
     document.body.style.background = 'green';
   });
 
+  socket.on('stop-drawings', function(data){
+    stopDrawings();
+  });
+
+   socket.on('audio-received', function(data){
+    console.log("Audio received!", data);
+  });
+
+  socket.on('change-color', function(data){
+    Drawer.changeColor();
+  });
+
   var clickRedBtn = function(){
     socket.emit('clicked-red-button-live', data);
   }
@@ -83,11 +95,6 @@ var Live = (function(Drawer) {
   var stopDrawings = function(){
     Drawer.stopDrawings();
   }
-
-  socket.on('audio-received', function(data){
-    console.log("Audio received!", data);
-
-  });
 
 
 

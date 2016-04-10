@@ -1,10 +1,10 @@
-var Stage = (function(Analyser, Drawer) {  
+var Stage = (function(Analyser, Drawer) {
 
   //expose a global socket for client (this app)
   var socket = io();
   var data = {"sound" : "555,5555,6,66,,6,76776"};
-  var peer = new Peer('stage', {host: '192.168.1.200', port: 4002, path: '/rt', debug: 3});
-  
+  var peer = new Peer('stage', {host: '192.168.1.200', port: 4002, path: '/rt', debug: 0});
+
   var audioContext    = new AudioContext();
   var realAudioInput  = null,
       analyserNode    = null;
@@ -17,9 +17,9 @@ var Stage = (function(Analyser, Drawer) {
 
 
   socket.emit('stage-connect', data);
-  
+
   document.getElementById("output").innerHTML = "test";
-  
+
   socket.on('changeBkgColor', function(data){
     document.body.style.background = 'green';
   });
@@ -32,14 +32,12 @@ var Stage = (function(Analyser, Drawer) {
     //PROCESS AUDIO HERE!
     //console.log(evt);
   }
-  
+
 
   var globalAnalyserNode;
   var captureAudio = function(){
     var streamPromise = Analyser.captureAudio(processAudio);
 
-    //console.log(streamPromise);
-    //socket.emit('audio-sent', audioStream);
 
     streamPromise.then(function(audioStream){
 
@@ -56,7 +54,7 @@ var Stage = (function(Analyser, Drawer) {
       //send analyserNode to live, from here
       var call = peer.call('live', audioStream);
       console.log('streamin',audioStream);
-     
+
     });
   }
 
@@ -77,6 +75,16 @@ var Stage = (function(Analyser, Drawer) {
     Analyser.stopAudioCapture();
   }
 
+  var stopDrawings = function(){
+    Drawer.stopDrawings();
+    socket.emit('stop-drawings', data);
+  }
+
+  var changeColor = function(){
+
+    socket.emit('change-color', data);
+  }
+
 
 
 
@@ -85,7 +93,9 @@ var Stage = (function(Analyser, Drawer) {
     socket            : socket,
     clickRedBtn       : clickRedBtn,
     captureAudio      : captureAudio,
-    stopAudioCapture  : stopAudioCapture
+    stopAudioCapture  : stopAudioCapture,
+    stopDrawings      : stopDrawings,
+    changeColor       : changeColor,
   };
 
 

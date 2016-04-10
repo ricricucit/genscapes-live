@@ -62,11 +62,11 @@ var socket = {};
 
 //start express
 https_live.listen(config.live_port, config.live_address ,function(){
-  console.log('listening live on '+config.live_address+':'+config.live_port);
+  console.log('listening live on https://'+config.live_address+':'+config.live_port);
 });
 //start express
 https_stage.listen(config.stage_port, config.stage_address ,function(){
-  console.log('listening stage on '+config.stage_address+':'+config.stage_port);
+  console.log('listening stage on https://'+config.stage_address+':'+config.stage_port);
 });
 
 //start express
@@ -114,7 +114,7 @@ io_live.on('connection', function(socket){
     }
   });
 
-  
+
   //client connection
   socket.on('client-connect', function(data){
     middleware.addClient(socket.client.id, "client", data);
@@ -152,17 +152,25 @@ io_stage.on('connection', function(socket){
     middleware.addClient(socket.client.id, "stage", data);
   });
 
-  socket.on('audio-sent', function(streamData){
-    console.log('--------------------- audio received from io_stage!', streamData);
-    io_live.sockets.emit('audio-received', streamData);
-  });
-
-
   socket.on('clicked-red-button-stage', function(data){
     console.log('----------------------------------------------- CLICKED RED BUTTON from Stage!');
     io_live.sockets.emit('changeBkgColor', data);
     io_stage.sockets.emit('changeBkgColor', data);
   });
+
+  socket.on('stop-drawings', function(data){
+    console.log('----------------------------------------------- Stop Drawings from Stage!');
+    io_live.sockets.emit('stop-drawings', data);
+
+  });
+
+  socket.on('change-color', function(data){
+    console.log('----------------------------------------------- Change Color!');
+    io_live.sockets.emit('change-color', data);
+
+  });
+
+
 
 
 
