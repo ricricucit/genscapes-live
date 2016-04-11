@@ -5,6 +5,17 @@ var Stage = (function(Analyser, Drawer) {
   var data = {"sound" : "555,5555,6,66,,6,76776"};
   var peer = new Peer('stage', {host: '192.168.1.105', port: 4002, path: '/rt', debug: 0});
 
+  var videoElement = document.querySelector('video');
+  var audioInputSelect = document.querySelector('select#audioSource');
+  var audioOutputSelect = document.querySelector('select#audioOutput');
+  var videoSelect = document.querySelector('select#videoSource');
+
+  var AVselectors = [audioInputSelect, audioOutputSelect, videoSelect];
+
+  // audioInputSelect.onchange   = Analyser.start();
+  // audioOutputSelect.onchange  = Analyser.changeAudioDestination();
+  // videoSelect.onchange        = Analyser.start();
+
   var audioContext    = new AudioContext();
   var realAudioInput  = null,
       analyserNode    = null;
@@ -14,7 +25,6 @@ var Stage = (function(Analyser, Drawer) {
   conn.on('open', function(){
     conn.send('hi!');
   });
-
 
   socket.emit('stage-connect', data);
 
@@ -36,7 +46,7 @@ var Stage = (function(Analyser, Drawer) {
 
   var globalAnalyserNode;
   var captureAudio = function(){
-    var streamPromise = Analyser.captureAudio(processAudio);
+    var streamPromise = Analyser.captureStream(AVselectors, videoElement);
 
 
     streamPromise.then(function(audioStream){
@@ -95,7 +105,7 @@ var Stage = (function(Analyser, Drawer) {
     captureAudio      : captureAudio,
     stopAudioCapture  : stopAudioCapture,
     stopDrawings      : stopDrawings,
-    changeColor       : changeColor,
+    changeColor       : changeColor
   };
 
 
