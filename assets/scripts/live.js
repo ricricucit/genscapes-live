@@ -4,7 +4,7 @@ var Live = (function(Utils, Drawer) {
   var socket = io();
   var data = {};
   //var peer = new Peer('live', {host: '192.168.1.105', port: 4001, path: '/rt'});
-  var peer = new Peer('live', {host: '192.168.1.105', port: 3002, path: '/rt', debug: 0});
+  var peer = new Peer('live', {host: '192.168.1.105', port: 3002, path: '/rt', debug: 3});
 
   var audioContext    = new AudioContext();
   var realAudioInput  = null,
