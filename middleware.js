@@ -3,14 +3,14 @@
 
   var liveObj = {
                   "users" : [],
-                  "controller" : {"key1": 1, "key2": 0, "key3": 1},
-                  "audio_stream" : []
+                  "controller" : {"key1": 1, "key2": 0, "key3": 1}
                 }
 
   var connectedIds = [];
 
   function getLiveObj() {
-    console.log(liveObj);
+    /*console.log(liveObj);*/
+    return liveObj;
   }
 
   function addClient(clientId, type, extras) {

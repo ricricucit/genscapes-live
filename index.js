@@ -85,7 +85,7 @@ app_live.get('/message', function(req, res){
   res.send('OK');
 });
 //endpoint for streaming
-app_live.use('/rt',  ExpressPeerServer(https_stream_stage, {debug: 0}));
+app_live.use('/rt',  ExpressPeerServer(https_stream_stage, {debug: 3}));
 
 
 //serve live JS App (getting stream from everybody + drawing)
@@ -125,6 +125,8 @@ io_live.on('connection', function(socket){
   //live connection
   socket.on('cloud-connect', function(data){
     middleware.addClient(socket.client.id, "cloud", data);
+    var liveObj = middleware.getLiveObj()
+    socket.broadcast.emit("user-joined", liveObj);
   });
 
   //test event

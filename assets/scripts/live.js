@@ -10,6 +10,7 @@ var Live = (function(Utils, Drawer) {
   var realAudioInput  = null,
       analyserNode    = null;
 
+  var streamFromStage = {};
 
   //connect to socket
   var user_id         = Utils.userIDgenerator();
@@ -33,6 +34,8 @@ var Live = (function(Utils, Drawer) {
     call.on('stream', function(remoteStream){
       // Show stream in some video/canvas element.
       console.log('Stream HERE!',remoteStream);
+
+      streamFromStage = remoteStream;
 
       // The Following structure creates this graph:
       // realAudioInput --> analyserNode --> audioProcessor
@@ -77,6 +80,13 @@ var Live = (function(Utils, Drawer) {
   }
 
   document.getElementById("output").innerHTML = "test";
+
+  socket.on('user-joined', function(data){
+    alert('new user!');
+    var call = peer.call('mobile_'+data.users[data.users.length-1].user_id, streamFromStage);
+
+    console.log('new user!', data);
+  });
 
   socket.on('changeBkgColor', function(data){
     document.body.style.background = 'green';
