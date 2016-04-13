@@ -31,7 +31,7 @@ var https_stage = require('https').createServer( {
 var https_stream_stage = require('https').createServer( {
                                               key: privateKey,
                                               cert: certificate
-                                          }, app_stage);
+                                          }, app_live);
 
 //create socket from socket.io and pass the http server to it
 var io_live = require('socket.io')(https_live);
@@ -47,16 +47,16 @@ var socket = {};
 
 //start express LIVE
 https_live.listen(config.live_port, config.live_address ,function(){
-  console.log('listening LIVE on https://'+config.live_address+':'+config.live_port);
+  console.log('LIVE listening events on https://'+config.live_address+':'+config.live_port);
 }).on('error', function(err) {
   console.log('\n------------------------------------\nNetworking ERROR.\nCannot listen to: ' + config.live_address + ':' + config.live_port + '\nPlease check your Network settings\n------------------------------------\n');
   process.exit();
 });
 //start express LIVE (for streaming)
-https_stream_stage.listen(4002, config.live_address ,function(){
-  console.log('listening STREAMING LIVE on '+config.live_address+':4002');
+https_stream_stage.listen(3002, config.live_address ,function(){
+  console.log('LIVE listening STREAM events '+config.live_address+':3002');
 }).on('error', function(err) {
-  console.log('\n------------------------------------\nNetworking ERROR.\nCannot listen to: ' + config.live_address + ':4002\nPlease check your Network settings\n------------------------------------\n');
+  console.log('\n------------------------------------\nNetworking ERROR.\nCannot listen to: ' + config.live_address + ':3002\nPlease check your Network settings\n------------------------------------\n');
   process.exit();
 });
 //start express STAGE
@@ -65,7 +65,7 @@ https_stage.listen(config.stage_port, config.stage_address ,function(){
 }).on('error', function(err) {
   console.log('\n------------------------------------\nNetworking ERROR.\nCannot listen to: ' + config.stage_address + ':' + config.stage_port + '\nPlease check your Network settings\n------------------------------------\n');
   process.exit();
-});
+})
 
 //define static assets folder as "/assets"
 app_live.use(express.static(path.join(__dirname, 'assets')));
@@ -77,22 +77,25 @@ app_stage.use(express.static(path.join(__dirname, 'bower_components')));
 app_stage.use(express.static(path.join(__dirname, 'node_modules')));
 
 
-app_stage.use('/rt',  ExpressPeerServer(https_stream_stage, {debug: 0}));
-
-
 //ROUTES
-app_live.get('/', function(req, res){
-  res.sendFile(__dirname + '/templates/live.html');
-});
-
-app_stage.get('/', function(req, res){
-  res.sendFile(__dirname + '/templates/stage.html');
-});
 
 //endpoint for cloud server
 app_live.get('/message', function(req, res){
   io_live.sockets.emit('changeBkgColor', '#556644');
   res.send('OK');
+});
+//endpoint for streaming
+app_live.use('/rt',  ExpressPeerServer(https_stream_stage, {debug: 0}));
+
+
+//serve live JS App (getting stream from everybody + drawing)
+app_live.get('/', function(req, res){
+  res.sendFile(__dirname + '/templates/live.html');
+});
+
+//serve stage JS App (getting linein and streaming to live)
+app_stage.get('/', function(req, res){
+  res.sendFile(__dirname + '/templates/stage.html');
 });
 
 //on connection creation, a socket is created

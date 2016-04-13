@@ -3,7 +3,7 @@ var Stage = (function(Utils, Analyser, Drawer) {
   //expose a global socket for client (this app)
   var socket = io();
   var data = {};
-  var peer = new Peer('stage', {host: '192.168.1.105', port: 4002, path: '/rt', debug: 0});
+  var peer = new Peer('stage', {host: '192.168.1.105', port: 3002, path: '/rt', debug: 0});
 
   var videoElement = document.querySelector('video');
   var audioInputSelect = document.querySelector('select#audioSource');
