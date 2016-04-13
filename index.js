@@ -122,6 +122,11 @@ io_live.on('connection', function(socket){
     middleware.addClient(socket.client.id, "live", data);
   });
 
+  //live connection
+  socket.on('cloud-connect', function(data){
+    middleware.addClient(socket.client.id, "cloud", data);
+  });
+
   //test event
   socket.on('clicked-red-button', function(data){
     console.log('----------------------------------------------- CLICKED RED BUTTON from live!');
