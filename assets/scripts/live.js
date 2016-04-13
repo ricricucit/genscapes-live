@@ -1,8 +1,8 @@
-var Live = (function(Drawer) {
+var Live = (function(Utils, Drawer) {
 
   //expose a global socket for client (this app)
   var socket = io();
-  var data = {"sound" : "555,5555,6,66,,6,76776"};
+  var data = {};
   //var peer = new Peer('live', {host: '192.168.1.105', port: 4001, path: '/rt'});
   var peer = new Peer('live', {host: '192.168.1.105', port: 4002, path: '/rt', debug: 0});
 
@@ -10,7 +10,14 @@ var Live = (function(Drawer) {
   var realAudioInput  = null,
       analyserNode    = null;
 
+
+  //connect to socket
+  var user_id         = Utils.userIDgenerator();
+  data                = {'user_id': user_id};
+
   socket.emit('live-connect', data);
+
+
   peer.on('connection', function(conn) {
     conn.on('data', function(data){
       // Will print 'hi!'
@@ -106,4 +113,4 @@ var Live = (function(Drawer) {
   };
 
 
-})(Drawer);
+})(Utils, Drawer);

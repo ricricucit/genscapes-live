@@ -77,7 +77,7 @@ app_stage.use(express.static(path.join(__dirname, 'bower_components')));
 app_stage.use(express.static(path.join(__dirname, 'node_modules')));
 
 
-app_stage.use('/rt',  ExpressPeerServer(https_stream_stage, {debug: 3}));
+app_stage.use('/rt',  ExpressPeerServer(https_stream_stage, {debug: 0}));
 
 
 //ROUTES
@@ -98,7 +98,7 @@ app_live.get('/message', function(req, res){
 //on connection creation, a socket is created
 io_live.on('connection', function(socket){
 
-  console.log('1 Live user connected, ID: ', socket.client.id);
+  console.log('\n✆ Live/Projection connected, ID: ', socket.client.id);
 
   //middleware.getLiveObj();
 
@@ -109,14 +109,14 @@ io_live.on('connection', function(socket){
     middleware.removeClient(socket.client.id);
 
     if(!middleware.stageIsConnected()){
-      console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!SHIEEEEEET: stage is not there!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+      console.error('\n☹ STAGE is not present.')
     }
   });
 
 
-  //client connection
-  socket.on('client-connect', function(data){
-    middleware.addClient(socket.client.id, "client", data);
+  //live connection
+  socket.on('live-connect', function(data){
+    middleware.addClient(socket.client.id, "live", data);
   });
 
   //test event
@@ -129,7 +129,7 @@ io_live.on('connection', function(socket){
 //on connection creation, a socket is created
 io_stage.on('connection', function(socket){
 
-  console.log('1 Stage user connected, ID: ', socket.client.id);
+  console.log('\n♪ Stage Device (linein provider) connected, socket.client.id: ', socket.client.id);
 
   //middleware.getLiveObj();
 
@@ -139,14 +139,12 @@ io_stage.on('connection', function(socket){
     middleware.removeClient(socket.client.id);
 
     if(!middleware.stageIsConnected()){
-      console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-      console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!SHIEEEEEET: Stage is not there!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-      console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+      console.error('\n☹ STAGE is not present.')
     }
 
   });
 
-  //linein connection
+  //stage/linein connection
   socket.on('stage-connect', function(data){
     middleware.addClient(socket.client.id, "stage", data);
   });

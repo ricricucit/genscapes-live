@@ -1,8 +1,8 @@
-var Stage = (function(Analyser, Drawer) {
+var Stage = (function(Utils, Analyser, Drawer) {
 
   //expose a global socket for client (this app)
   var socket = io();
-  var data = {"sound" : "555,5555,6,66,,6,76776"};
+  var data = {};
   var peer = new Peer('stage', {host: '192.168.1.105', port: 4002, path: '/rt', debug: 0});
 
   var videoElement = document.querySelector('video');
@@ -20,13 +20,18 @@ var Stage = (function(Analyser, Drawer) {
   var realAudioInput  = null,
       analyserNode    = null;
 
+  //connect to socket
+  var user_id         = Utils.userIDgenerator();
+  data                = {'user_id': user_id};
+
+  socket.emit('stage-connect', data);
+
+
   //connect to live, send a simple message
   var conn = peer.connect('live');
   conn.on('open', function(){
     conn.send('hi!');
   });
-
-  socket.emit('stage-connect', data);
 
   document.getElementById("output").innerHTML = "test";
 
@@ -109,4 +114,4 @@ var Stage = (function(Analyser, Drawer) {
   };
 
 
-})(Analyser, Drawer);
+})(Utils, Analyser, Drawer);
