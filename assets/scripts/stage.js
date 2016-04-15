@@ -3,7 +3,34 @@ var Stage = (function(Utils, Analyser, Drawer) {
   //expose a global socket for client (this app)
   var socket = io();
   var data = {};
-  var peer = new Peer('stage', {host: '192.168.1.105', port: 3002, path: '/rt', debug: 3});
+  var peer = new Peer('stage', {host: '192.168.1.105',
+                                port: 3002,
+                                path: '/rt',
+                                debug: 3,
+                                config: {'iceServers': [
+                                                    { 'url': 'stun:stun.l.google.com:19302' },
+                                                    { 'url': 'stun:stun.l.google.com:19302'  },
+                                                    { 'url': 'stun:stun1.l.google.com:19302' },
+                                                    { 'url': 'stun:stun2.l.google.com:19302' },
+                                                    { 'url': 'stun:stun3.l.google.com:19302' },
+                                                    { 'url': 'stun:stun4.l.google.com:19302' },
+                                                    { 'url': 'stun:stun.ekiga.net' },
+                                                    { 'url': 'stun:stun.ideasip.com' },
+                                                    { 'url': 'stun:stun.rixtelecom.se' },
+                                                    { 'url': 'stun:stun.schlund.de'  },
+                                                    { 'url': 'stun:stun.stunprotocol.org:3478' },
+                                                    { 'url': 'stun:stun.voiparound.com'  },
+                                                    { 'url': 'stun:stun.voipbuster.com'  },
+                                                    { 'url': 'stun:stun.voipstunt.com' },
+                                                    { 'url': 'stun:stun.voxgratia.org' },
+                                                    {
+                                                      url: 'turn:numb.viagenie.ca',
+                                                      credential: 'Ricucit2.',
+                                                      username: 'enrico.icardi@gmail.com'
+                                                    }
+                                                  ]}
+
+                                });
 
   var videoElement = document.querySelector('video');
   var audioInputSelect = document.querySelector('select#audioSource');

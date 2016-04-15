@@ -4,7 +4,33 @@ var Live = (function(Utils, Drawer) {
   var socket = io();
   var data = {};
   //var peer = new Peer('live', {host: '192.168.1.105', port: 4001, path: '/rt'});
-  var peer = new Peer('live', {host: '192.168.1.105', port: 3002, path: '/rt', debug: 3});
+  var peer = new Peer('live', { host: '192.168.1.105',
+                                port: 3002,
+                                path: '/rt',
+                                debug: 3,
+                                config: {'iceServers': [
+                                                    { 'url': 'stun:stun.l.google.com:19302' },
+                                                    { 'url': 'stun:stun.l.google.com:19302'  },
+                                                    { 'url': 'stun:stun1.l.google.com:19302' },
+                                                    { 'url': 'stun:stun2.l.google.com:19302' },
+                                                    { 'url': 'stun:stun3.l.google.com:19302' },
+                                                    { 'url': 'stun:stun4.l.google.com:19302' },
+                                                    { 'url': 'stun:stun.ekiga.net' },
+                                                    { 'url': 'stun:stun.ideasip.com' },
+                                                    { 'url': 'stun:stun.rixtelecom.se' },
+                                                    { 'url': 'stun:stun.schlund.de'  },
+                                                    { 'url': 'stun:stun.stunprotocol.org:3478' },
+                                                    { 'url': 'stun:stun.voiparound.com'  },
+                                                    { 'url': 'stun:stun.voipbuster.com'  },
+                                                    { 'url': 'stun:stun.voipstunt.com' },
+                                                    { 'url': 'stun:stun.voxgratia.org' },
+                                                    {
+                                                      url: 'turn:numb.viagenie.ca',
+                                                      credential: 'Ricucit2.',
+                                                      username: 'enrico.icardi@gmail.com'
+                                                    }
+                                                  ]}
+                              });
 
   var audioContext    = new AudioContext();
   var realAudioInput  = null,
@@ -81,11 +107,11 @@ var Live = (function(Utils, Drawer) {
 
   document.getElementById("output").innerHTML = "test";
 
-  socket.on('user-joined', function(data){
-    alert('new user!');
-    var call = peer.call('mobile_'+data.users[data.users.length-1].user_id, streamFromStage);
+  socket.on('cloud-joined', function(data){
+    alert('cloud is connected...now calling cloud');
+    var call = peer.call('cloud', streamFromStage);
 
-    console.log('new user!', data);
+    console.log('cloud is here!', data);
   });
 
   socket.on('changeBkgColor', function(data){

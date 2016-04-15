@@ -13,7 +13,7 @@ var app_stage = express();
 var path = require('path');
 // Require file module
 const fs = require('fs');
-// set HTTPS certs
+// set HTTPS createServer
 var privateKey = fs.readFileSync( config.ssl_private_key );
 var certificate = fs.readFileSync( config.ssl_certificate );
 
@@ -126,7 +126,7 @@ io_live.on('connection', function(socket){
   socket.on('cloud-connect', function(data){
     middleware.addClient(socket.client.id, "cloud", data);
     var liveObj = middleware.getLiveObj()
-    socket.broadcast.emit("user-joined", liveObj);
+    socket.broadcast.emit("cloud-joined", liveObj);
   });
 
   //test event
