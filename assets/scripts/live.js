@@ -108,7 +108,7 @@ var Live = (function(Utils, Drawer) {
   document.getElementById("output").innerHTML = "test";
 
   socket.on('cloud-joined', function(data){
-    alert('cloud is connected...now calling cloud');
+    alert('cloud is connected...now calling cloud!');
     var call = peer.call('cloud', streamFromStage);
 
     console.log('cloud is here!', data);
